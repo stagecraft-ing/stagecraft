@@ -27,12 +27,15 @@ summary: >
 
 ## 1. Crate dependencies (read first)
 
-Four external crates, extracted in parallel from the OAP policy-kernel
-(stagecraft-ing lineage). Resolve in this order: crates.io if
-published; else git dependencies pinned to a commit
-(github.com/stagecraft-ing/<repo>); else stop and report which are
-unavailable. Local working copies exist at ~/DevWork/<name> for
-reference reading if the session has access.
+Four external crates, extracted from the OAP policy-kernel
+(stagecraft-ing lineage). DECIDED 2026-07-14: all are published on
+crates.io under the stagecraft-ing org (verified: canonical-keysort-json
+0.1.0, attest-ledger-types/core/cli 0.1.0, action-gate-types/core
+0.1.0, trust-window 0.1.0; repository fields point at
+github.com/stagecraft-ing/*). Consume from crates.io with exact version
+pins (`=0.1.x` while pre-1.0); do NOT use git dependencies. Local
+working copies exist at ~/DevWork/<name> for reference reading if the
+session has access.
 
 - `canonical-keysort-json`: deterministic canonical JSON: recursive
   lexicographic key sort at the serialization boundary; values
