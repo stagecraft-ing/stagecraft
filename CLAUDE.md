@@ -1,0 +1,68 @@
+# CLAUDE.md: stagecraft
+
+## Project Overview
+
+Stagecraft is the governed agentic delivery control plane: tenants
+(per-customer GitHub App installations), factory (stamps apps from the
+enrahitu template via its versioned `template.toml` contract), fleet
+(operates stamped single-container apps; deployd's orchestration core as
+an in-process napi addon), and the governance UI. It is itself the first
+production EnRaHiTu app. The thesis, consolidation record, service map,
+and milestone ladder live in `specs/001-stagecraft-thesis/spec.md`.
+
+The repo is currently pre-code: the spec spine is the substance, and
+services land under their own numbered specs as their build starts.
+
+## Repository Structure
+
+```
+specs/       Feature specs, the authoritative design record
+standards/   spec-spine constitution, contract, templates
+.derived/    Compiler output (committed shards; never hand-edit)
+.claude/     rules (orchestrator, governed reads, adversarial refusal)
+```
+
+Planned service directories (spec 001 §3): `addon/`, `core/`, `auth/`,
+`idp/`, `tenants/`, `factory/`, `fleet/`, `webapp/`.
+
+## Governance
+
+This repo is governed by spec-spine (`spec-spine.toml`, owned by spec 000):
+
+- **Specs are the source of truth.** Every substantive change is bound to
+  a spec under `specs/NNN-slug/spec.md`; owned paths and their owning spec
+  move together (`spec-spine couple` enforces this at PR time; waiver
+  keyword `Spec-Drift-Waiver:` in the PR body).
+- **Governed reads.** Read `.derived/**` only through `spec-spine`
+  subcommands (`registry list/show/status-report`, `index
+  check/render/orphans`); never ad-hoc `jq`/`python` parsers
+  (`.claude/rules/governed-artifact-reads.md`).
+- **After editing any `specs/*/spec.md`**: run
+  `spec-spine compile && spec-spine index` and commit the regenerated
+  `.derived/` shards with the spec edit.
+
+## Build Commands
+
+```bash
+spec-spine compile    # specs -> .derived/spec-registry/by-spec/
+spec-spine index      # code linkage -> .derived/codebase-index/
+spec-spine lint       # corpus conformance
+spec-spine couple --base origin/main --head HEAD   # the PR coupling gate
+```
+
+Requires `spec-spine` (`cargo install spec-spine-cli`). Application build
+tooling arrives with the first service spec.
+
+## Key Conventions
+
+- **License boundaries are load-bearing.** This repo is AGPL-3.0; the
+  enrahitu template and stagecraft-cli are Apache-2.0 in their own repos.
+  Do not move code across the boundary without noting the license
+  implication in the PR.
+- **The factory consumes `template.toml` and nothing else** (enrahitu
+  spec 009). Never reach into template internals from factory code.
+- **CoreLedger is the data API** (enrahitu specs 003/011): the control
+  plane runs the Postgres driver; no direct SQL client and no Encore
+  `SQLDatabase` anywhere.
+- **Fleet v1 targets hetzner-k3s** (spec 001 §3); the unit of placement
+  is "EnRaHiTu container + volume + ingress".
