@@ -1,0 +1,34 @@
+{
+  "record": {
+    "created": "2026-07-14",
+    "dependsOn": [
+      "005-factory-service"
+    ],
+    "establishes": [
+      {
+        "kind": "directory",
+        "path": "fleet/"
+      },
+      {
+        "kind": "directory",
+        "path": "addon/fleet-native/"
+      }
+    ],
+    "id": "006-fleet",
+    "implementation": "pending",
+    "sectionHeadings": [
+      "006: Fleet",
+      "1. Harvest source (requires operator-granted read access)",
+      "2. Territory",
+      "3. Behavior",
+      "4. Acceptance",
+      "5. Out of scope"
+    ],
+    "specPath": "specs/006-fleet/spec.md",
+    "status": "approved",
+    "summary": "Milestone M3: operate stamped apps. The unit of placement is \"one EnRaHiTu container + one volume + one ingress\" on the existing hetzner-k3s cluster. deployd-api-rs (the OAP-era Rust K8s orchestrator, axum + hiqlite) donates its orchestration core as a napi-rs addon (the hiqlite-native pattern): the axum HTTP layer disappears, the K8s knowledge stays. A fleet/ Encore service exposes deploy / status / update / backup over the addon. Done-when is a fleet of ten stamped apps on one box with update and backup exercised.\n",
+    "title": "Fleet: deployd's core as an in-process addon, placing EnRaHiTu apps"
+  },
+  "shardHash": "d45f1208b18a8b1955889ac472aaa31e6f1017be511405fdc84523f64b9111b7",
+  "specVersion": "1.1.0"
+}

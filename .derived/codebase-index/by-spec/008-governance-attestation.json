@@ -1,0 +1,47 @@
+{
+  "diagnostics": {
+    "errors": [],
+    "warnings": [
+      {
+        "code": "W-001",
+        "message": "spec '008-governance-attestation' directory unit 'governance/' is not a directory",
+        "path": "governance/"
+      },
+      {
+        "code": "W-001",
+        "message": "spec '008-governance-attestation' directory unit 'addon/governance-native/' is not a directory",
+        "path": "addon/governance-native/"
+      }
+    ]
+  },
+  "mapping": {
+    "dependsOn": [
+      "002-app-shell"
+    ],
+    "implementingPaths": [],
+    "resolvedUnits": [
+      {
+        "locations": [],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "addon/governance-native/"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "governance/"
+        }
+      }
+    ],
+    "specId": "008-governance-attestation",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "403b26b7af5325bcf7d31db7adc2c858df7ece5ad45353c2266feed752205b53"
+}

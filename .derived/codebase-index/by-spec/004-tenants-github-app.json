@@ -1,0 +1,34 @@
+{
+  "diagnostics": {
+    "errors": [],
+    "warnings": [
+      {
+        "code": "W-001",
+        "message": "spec '004-tenants-github-app' directory unit 'tenants/' is not a directory",
+        "path": "tenants/"
+      }
+    ]
+  },
+  "mapping": {
+    "dependsOn": [
+      "002-app-shell",
+      "003-postgres-adoption"
+    ],
+    "implementingPaths": [],
+    "resolvedUnits": [
+      {
+        "locations": [],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "tenants/"
+        }
+      }
+    ],
+    "specId": "004-tenants-github-app",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "e69f80c1cbbe4512c60a6b406230f72b63b44ba642eca4d61fba5e9769578302"
+}

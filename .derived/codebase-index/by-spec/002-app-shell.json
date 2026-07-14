@@ -1,0 +1,243 @@
+{
+  "diagnostics": {
+    "errors": [],
+    "warnings": [
+      {
+        "code": "W-001",
+        "message": "spec '002-app-shell' file unit 'package.json' does not exist",
+        "path": "package.json"
+      },
+      {
+        "code": "W-001",
+        "message": "spec '002-app-shell' file unit 'encore.app' does not exist",
+        "path": "encore.app"
+      },
+      {
+        "code": "W-001",
+        "message": "spec '002-app-shell' file unit 'tsconfig.json' does not exist",
+        "path": "tsconfig.json"
+      },
+      {
+        "code": "W-001",
+        "message": "spec '002-app-shell' file unit 'vitest.config.ts' does not exist",
+        "path": "vitest.config.ts"
+      },
+      {
+        "code": "W-001",
+        "message": "spec '002-app-shell' file unit 'vitest.setup.ts' does not exist",
+        "path": "vitest.setup.ts"
+      },
+      {
+        "code": "W-001",
+        "message": "spec '002-app-shell' directory unit 'addon/' is not a directory",
+        "path": "addon/"
+      },
+      {
+        "code": "W-001",
+        "message": "spec '002-app-shell' directory unit 'core/' is not a directory",
+        "path": "core/"
+      },
+      {
+        "code": "W-001",
+        "message": "spec '002-app-shell' directory unit 'auth/' is not a directory",
+        "path": "auth/"
+      },
+      {
+        "code": "W-001",
+        "message": "spec '002-app-shell' directory unit 'idp/' is not a directory",
+        "path": "idp/"
+      },
+      {
+        "code": "W-001",
+        "message": "spec '002-app-shell' directory unit 'lib/' is not a directory",
+        "path": "lib/"
+      },
+      {
+        "code": "W-001",
+        "message": "spec '002-app-shell' directory unit 'hiq/' is not a directory",
+        "path": "hiq/"
+      },
+      {
+        "code": "W-001",
+        "message": "spec '002-app-shell' directory unit 'health/' is not a directory",
+        "path": "health/"
+      },
+      {
+        "code": "W-001",
+        "message": "spec '002-app-shell' directory unit 'web/' is not a directory",
+        "path": "web/"
+      },
+      {
+        "code": "W-001",
+        "message": "spec '002-app-shell' directory unit 'scripts/' is not a directory",
+        "path": "scripts/"
+      },
+      {
+        "code": "W-001",
+        "message": "spec '002-app-shell' directory unit 'vendor/' is not a directory",
+        "path": "vendor/"
+      },
+      {
+        "code": "W-001",
+        "message": "spec '002-app-shell' directory unit 'docker/' is not a directory",
+        "path": "docker/"
+      }
+    ]
+  },
+  "mapping": {
+    "dependsOn": [
+      "001-stagecraft-thesis"
+    ],
+    "implementingPaths": [],
+    "resolvedUnits": [
+      {
+        "locations": [],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "addon/"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "auth/"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "core/"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "docker/"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "health/"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "hiq/"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "idp/"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "lib/"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "scripts/"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "vendor/"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "web/"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "encore.app"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "package.json"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "tsconfig.json"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "vitest.config.ts"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "vitest.setup.ts"
+        }
+      }
+    ],
+    "specId": "002-app-shell",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "8bf8e77591653a11a1a48b920c344c689753fe0bb3dd3ca44912aa2bbf685c07"
+}

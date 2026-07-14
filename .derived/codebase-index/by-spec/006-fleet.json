@@ -1,0 +1,47 @@
+{
+  "diagnostics": {
+    "errors": [],
+    "warnings": [
+      {
+        "code": "W-001",
+        "message": "spec '006-fleet' directory unit 'fleet/' is not a directory",
+        "path": "fleet/"
+      },
+      {
+        "code": "W-001",
+        "message": "spec '006-fleet' directory unit 'addon/fleet-native/' is not a directory",
+        "path": "addon/fleet-native/"
+      }
+    ]
+  },
+  "mapping": {
+    "dependsOn": [
+      "005-factory-service"
+    ],
+    "implementingPaths": [],
+    "resolvedUnits": [
+      {
+        "locations": [],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "addon/fleet-native/"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "fleet/"
+        }
+      }
+    ],
+    "specId": "006-fleet",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "c0ba804e6b511b061037f97c731f1f6813b099472f3ac04f58bc96a5298d8605"
+}

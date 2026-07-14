@@ -1,0 +1,33 @@
+{
+  "diagnostics": {
+    "errors": [],
+    "warnings": [
+      {
+        "code": "W-001",
+        "message": "spec '007-governance-webapp' directory unit 'webapp/' is not a directory",
+        "path": "webapp/"
+      }
+    ]
+  },
+  "mapping": {
+    "dependsOn": [
+      "004-tenants-github-app"
+    ],
+    "implementingPaths": [],
+    "resolvedUnits": [
+      {
+        "locations": [],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "webapp/"
+        }
+      }
+    ],
+    "specId": "007-governance-webapp",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "e2cc596b4ea4d4aa1e06ec255b81f0a22bbc6d2bb86932ba61077cb03da0fe6c"
+}
