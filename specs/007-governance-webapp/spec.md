@@ -91,3 +91,40 @@ did not author):
   adds the UI once the shape exists).
 - Design-system investment, theming, mobile polish.
 - Admin/ops views beyond the fleet table.
+
+## 5. Status (2026-07-15)
+
+Implementation landed, built, unit-tested, and gated; kept `in-progress`
+pending two acceptance items that need state this session could not
+produce.
+
+Verified against a live local control plane (`encore run` on :4000, the
+webapp dev server on :5173, CoreLedger on Postgres, mock auth driver):
+
+- The full §3 login-to-detail request/response contract, end to end:
+  unauthenticated `GET /api/v1/auth/me` 401 (the root loader's redirect
+  trigger); mock login 302 + session cookies; authenticated `me`;
+  `GET /api/v1/auth/csrf-token`; `POST /api/v1/tenants` (CSRF
+  double-submit); `GET /api/v1/tenants`; `GET /api/v1/tenants/:id`;
+  `GET .../github/install-url`. Every response shape matches the
+  webapp's typed client exactly.
+- `npm --prefix webapp run build` emits `backend/web/dist`; both the dev
+  server (:5173) and the served bundle (:4000) render the SPA.
+- vitest component tests (auth-loader redirect + login route) pass; the
+  spine gates (compile, index check, lint, couple with the waiver) and
+  the CI govern gate are green.
+
+Remaining before `complete`:
+
+- The literal in-browser §3.1 click-through (login -> create tenant ->
+  tenant detail through the rendered SPA) was not performed this
+  session: the browser-automation extension was not connected. The
+  underlying API flow is verified above; only the pixel-level walk is
+  outstanding.
+- §3.2 (launching a stamp shows live job progression) needs a real
+  GitHub App installation into a real org: a tenant with an active
+  installation whose org matches the target (spec 005 enforces this).
+  That is external state, not producible locally without installing the
+  Stagecraft GitHub App into a live org. The stamp launcher and
+  progress-polling UI are wired to spec 005's real endpoints and shapes;
+  they light up once a real installation exists.
