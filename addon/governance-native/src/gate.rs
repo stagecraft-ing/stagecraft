@@ -187,7 +187,7 @@ mod tests {
     use super::*;
 
     /// The committed gate config, the single source of truth for the service.
-    const GATE_V1: &str = include_str!("../../../governance/config/gate.v1.json");
+    const GATE_V1: &str = include_str!("../../../backend/governance/config/gate.v1.json");
 
     /// Golden hash of the committed config (order-sensitive over the four
     /// check ids). A change to gate.v1.json must update this line, making

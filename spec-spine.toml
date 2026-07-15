@@ -15,11 +15,12 @@ specs_dir     = "specs"
 derived_dir   = ".derived"
 standards_dir = "standards/spec"
 # The governance napi addon (spec 008) is a standalone Rust crate and npm
-# package: no root Cargo workspace or npm workspace exists in this repo yet
-# (the app shell, spec 002, brings the root package.json). Its manifests carry
-# the spec-spine key -> 008.
+# package. The app shell (spec 002) brings the root package.json (an Encore
+# app, spec-spine key -> 002) and the frontend/ SPA as a separate npm package
+# (also -> 002). The Encore toolchain and hiqlite addon are pinned @enrahitu/*
+# dependencies, not in-tree packages, so they are not listed here.
 standalone_rust_workspaces = ["addon/governance-native"]
-standalone_npm_packages    = ["addon/governance-native"]
+standalone_npm_packages    = ["addon/governance-native", "frontend"]
 
 [index]
 # Governance surfaces beyond the always-hashed core. Service manifests are

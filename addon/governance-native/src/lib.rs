@@ -33,7 +33,7 @@ mod flow_tests {
     // stamp flow that calls gate -> append -> verify end to end.
     #[test]
     fn stamp_flow_gate_then_append_then_verify() {
-        let config = include_str!("../../../governance/config/gate.v1.json");
+        let config = include_str!("../../../backend/governance/config/gate.v1.json");
 
         // 1. gate: an authenticated, posture-carrying stamp for an active
         //    tenant is allowed, and the decision carries the config hash.

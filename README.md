@@ -15,7 +15,8 @@ rehearsed on the platform itself first.
 
 ## Status
 
-Born governed, pre-code. The spec spine is the repo's current substance:
+Born governed. The spec spine is the authoritative design record; the app
+shell (spec 002) and the governance spine (spec 008) have now landed:
 
 - `specs/000-bootstrap/` defines the spec system itself.
 - `specs/001-stagecraft-thesis/` is the product thesis, the consolidation
@@ -28,6 +29,19 @@ Services land under their own numbered specs as their build starts:
 enrahitu's `template.toml` contract), `fleet/` (deployd's orchestration
 core as an in-process napi addon), `webapp/` (governance UI, Vite +
 React Router v7).
+
+## Chassis
+
+Stagecraft is stamped from the
+[enrahitu template](https://github.com/stagecraft-ing/enrahitu) as its
+first production consumer. The app shell (spec 002) imports the slimmed
+two-directory chassis (`backend/` + `frontend/`) at enrahitu commit
+`83a4551` (2026-07-15); the Encore toolchain and the hiqlite addon arrive
+as pinned `@enrahitu/*` npm packages (`0.1.0`), not vendored source. The
+imported chassis is Apache-2.0 entering this AGPL-3.0 repo, the sanctioned
+direction. There is no born-with provenance cert here yet: that is minted
+by the factory (spec 005) when it stamps apps, and stagecraft will carry
+its own once the factory can emit one.
 
 ## The product family
 

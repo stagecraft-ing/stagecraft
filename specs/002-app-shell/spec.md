@@ -3,35 +3,42 @@ id: "002-app-shell"
 title: "The control plane's EnRaHiTu app shell"
 status: approved
 created: "2026-07-14"
-implementation: pending
+implementation: in-progress
 depends_on:
   - "001-stagecraft-thesis"
 establishes:
   - "package.json"
+  - "package-lock.json"
   - "encore.app"
   - "tsconfig.json"
   - "vitest.config.ts"
   - "vitest.setup.ts"
-  - { kind: directory, path: "addon/" }
-  - { kind: directory, path: "core/" }
-  - { kind: directory, path: "auth/" }
-  - { kind: directory, path: "idp/" }
-  - { kind: directory, path: "lib/" }
-  - { kind: directory, path: "hiq/" }
-  - { kind: directory, path: "health/" }
-  - { kind: directory, path: "web/" }
+  - "infra.config.dev.json"
+  - "infra.config.json"
+  - ".github/workflows/verify.yml"
+  - { kind: directory, path: "backend/" }
+  - { kind: directory, path: "backend/auth/" }
+  - { kind: directory, path: "backend/core/" }
+  - { kind: directory, path: "backend/health/" }
+  - { kind: directory, path: "backend/hiq/" }
+  - { kind: directory, path: "backend/idp/" }
+  - { kind: directory, path: "backend/lib/" }
+  - { kind: directory, path: "backend/web/" }
+  - { kind: directory, path: "frontend/" }
   - { kind: directory, path: "scripts/" }
-  - { kind: directory, path: "vendor/" }
   - { kind: directory, path: "docker/" }
+  - { kind: directory, path: ".stagecraft/" }
 summary: >
-  Stagecraft becomes a running EnRaHiTu app: the chassis from
-  stagecraft-ing/enrahitu is brought into this repo (vendored Encore
-  toolchain, hiqlite addon, CoreLedger, auth baseline, rauthy proxy,
-  health, packaging, verify workflow), stamped with app name
-  "stagecraft". After this spec the control plane boots, authenticates,
-  and tests green; every later service spec (004+) adds Encore services
-  onto this shell. This is deliberate dogfooding: the platform is
-  stamped from the same template it will stamp for customers.
+  Stagecraft becomes a running EnRaHiTu app: the slimmed chassis from
+  stagecraft-ing/enrahitu is brought into this repo (the two-directory
+  backend/ + frontend/ layout, CoreLedger, auth baseline, rauthy proxy,
+  health, packaging, verify workflow; the Encore toolchain and the
+  hiqlite addon arrive as pinned @enrahitu/* npm packages, not vendored
+  source), stamped with app name "stagecraft". After this spec the
+  control plane boots, authenticates, and tests green; every later
+  service spec (004+) adds Encore services onto this shell. This is
+  deliberate dogfooding: the platform is stamped from the same template
+  it will stamp for customers.
 ---
 
 # 002: App shell
@@ -50,6 +57,12 @@ pinned npm packages (@enrahitu/toolchain, @enrahitu/hiqlite-native)
 rather than as vendored source; read the template's then-current
 CLAUDE.md for the layout truth and adjust the §2 mechanics to it.
 
+RESOLVED 2026-07-15: enrahitu 018 and 019 are `implementation: complete`
+(enrahitu commit 83a4551), which explicitly delegated the slimmed
+clean-clone / boot-smoke acceptance to this, its first stamped consumer.
+The slimmed import in §2 was performed against that commit and is that
+delegated acceptance; §2 records the mechanics actually used.
+
 ## 1. Purpose
 
 Every service the control plane needs (tenants, factory, fleet) is an
@@ -58,55 +71,88 @@ and it must arrive the same way a customer app arrives: stamped from the
 template, not hand-assembled, so that template drift and platform drift
 are the same drift and get caught together.
 
-## 2. How to bring the chassis in
+## 2. How the chassis was brought in
 
-1. Clone `git@github.com:stagecraft-ing/enrahitu.git` at its latest main
-   into a temp dir; run its stamp recipe with app_name `stagecraft`,
-   org `stagecraft-ing` (if the scaffold verb, enrahitu spec 014, is
-   implemented, use it: `node scripts/stamp.mjs --app-name stagecraft
-   --org stagecraft-ing`; otherwise apply the manual v0 recipe recorded
-   in enrahitu spec 014 §3 steps 2, 3, 5).
-2. Copy the stamped tree into this repo EXCEPT: `specs/`, `standards/`,
-   `.claude/`, `AGENTS.md`, `CLAUDE.md`, `README.md`, `LICENSE`,
-   `spec-spine.toml`, `.github/workflows/spec-spine.yml` (this repo's
-   governance identity wins; enrahitu's specs do not migrate). Take
-   `.github/workflows/verify.yml`, `.gitignore` (merge with the existing
-   one), and everything else.
-3. The imported tree's spec-linkage keys (`"spec-spine": { "spec": ... }`
-   in package.json files, `[package.metadata.spec-spine]` in
-   addon/Cargo.toml) point at enrahitu spec ids that do not exist here.
-   Repoint them: root package.json -> "002-app-shell"; addon/, webapp
-   dirs -> "002-app-shell" as well (service specs re-claim their
-   directories later). `spec-spine lint` failing on a dangling id is the
-   check that you caught them all.
-4. Record provenance: append to README.md a "Chassis" section naming the
-   enrahitu commit imported and the date. There is no born-with cert
-   here until the factory exists; note that explicitly.
-5. `spec-spine compile && spec-spine index`, commit the shards with the
+Performed 2026-07-15 against enrahitu commit 83a4551 (018/019 complete).
+No scaffold verb exists yet (enrahitu spec 014 is pending), so this was
+a manual slimmed import; it doubles as the consumer-side acceptance that
+enrahitu 018 §4 delegated to the first stamped consumer.
+
+1. Import the slimmed subset from enrahitu's latest main, preserving
+   paths: `backend/` (the whole Encore app: auth, core, health, hiq,
+   idp, lib, web), `frontend/` (the Vue SPA, without its node_modules),
+   `docker/`, and the app-owned `scripts/` files (docker-build.sh,
+   generate-keys.ts, sync-dev-rauthy-secret.mjs, verify-born-with.mjs
+   and its test, fixtures/). Root files: `encore.app`, `tsconfig.json`,
+   `vitest.config.ts`, `vitest.setup.ts`, `infra.config.dev.json`,
+   `infra.config.json`, `.stagecraft/born-with.schema.json`, and a
+   rewritten `.github/workflows/verify.yml`. NOT imported (the slimming,
+   spec 019 §1): `vendor/`, `addon/` (enrahitu's hiqlite source),
+   `packages/`, `template.toml`, and enrahitu's governance identity
+   (`specs/`, `standards/`, `.claude/`, `AGENTS.md`, `CLAUDE.md`,
+   `README.md`, `LICENSE`, `spec-spine.toml`, the spec-spine workflow):
+   this repo's identity wins. Never import enrahitu's `.env` (a live
+   secret). `.gitignore` is merged into this repo's existing one.
+2. The root `package.json` is written fresh, not copied: app name
+   `stagecraft`, `@enrahitu/toolchain` and `@enrahitu/hiqlite-native`
+   pinned to `0.1.0` from the registry (binaries resolve from
+   node_modules; no cargo runtime build), plus this repo's own
+   `@stagecraft/governance-native` addon (spec 008) as a `file:` dep and
+   a `build:addon` script. `npm install` generates the lockfile and
+   `npm ci` is reproducible from it (all six @enrahitu platform optionals
+   pinned, so linux CI resolves too). `infra.config.*` app_id and the SPA
+   title are stamped to `stagecraft`; substrate names (`@enrahitu/*`,
+   `ENRAHITU_*` env prefixes) are deliberately left as the chassis.
+3. One enrahitu bug was patched in the imported `vitest.config.ts`: its
+   `encoreRuntimeLib()` resolved the Encore runtime only from the
+   now-absent `vendor/`, breaking `npm test` for every slimmed consumer.
+   Fixed to delegate to the toolchain's exported resolver
+   (`@enrahitu/toolchain/resolve`), which finds the binary in
+   node_modules. Reported upstream to enrahitu.
+4. Repoint spec-linkage keys to this repo's ids: root `package.json` and
+   `frontend/package.json` -> `002-app-shell`. The governance addon and
+   service keep `008-governance-attestation`. `spec-spine lint` failing on
+   a dangling id is the check that they were all caught.
+5. The governance service (spec 008), authored at repo-root `governance/`
+   against the old flat layout, is relocated under `backend/governance/`
+   so its `../core/ledger` import resolves and Encore discovers it as a
+   service, and wired to the built addon. See spec 008 for that half.
+6. Record provenance: the README "Chassis" section names the enrahitu
+   commit and date. There is no born-with cert here until the factory
+   (spec 005) exists; that is noted there explicitly.
+7. `spec-spine compile && spec-spine index`; commit the shards with the
    import.
 
 ## 3. Constraints
 
-- The webapp/ Vue placeholder comes along for now; spec 007 replaces it
-  with the React Router v7 governance UI. Do not invest in it.
+- The frontend/ Vue placeholder comes along for now; spec 007 replaces
+  it with the React Router v7 governance UI. Do not invest in it.
 - License boundary (CLAUDE.md convention): the imported chassis is
-  Apache-2.0 code entering an AGPL-3.0 repo; that direction is fine.
-  Keep `vendor/encore/LICENSE` (MPL-2.0) intact.
+  Apache-2.0 code entering an AGPL-3.0 repo; that direction is fine. The
+  Encore toolchain (with its MPL-2.0 runtime) is no longer vendored: it
+  arrives as the @enrahitu/toolchain npm package, which carries its own
+  license, so there is no `vendor/` license file to keep here.
 - No Encore SQLDatabase anywhere; CoreLedger is the only durable-data
   API (chassis rule, kept).
-- `spec-spine.toml` gains the chassis packages:
-  `standalone_rust_workspaces = ["addon"]`,
-  `standalone_npm_packages = ["addon", "webapp"]`, and
-  `[index] extra_hashed_inputs` should match enrahitu's list so manifest
-  edits trip staleness here too.
+- `spec-spine.toml` reflects the slimmed shape: the root `package.json`
+  and `frontend/` are npm packages linked to this spec; the governance
+  addon and service stay on 008. `standalone_npm_packages` gains
+  `frontend` (the governance addon is already listed); `[index]
+  extra_hashed_inputs` gains the chassis manifests (the root and
+  frontend package.json, the infra configs) so edits trip staleness here
+  too.
 
 ## 4. Acceptance
 
-- From a clean checkout: `npm --prefix addon ci && npm ci &&
-  npm --prefix webapp ci`, `npm run build:addon`, `npm run build:runtime`,
-  `npm run build:app`, `npm run typecheck`, `npm test` all green
-  (the chassis suite, 32 tests at import time).
-- `npm run dev` boots; `GET /health` and `GET /hiq/health` return 200.
+- From a clean checkout: `npm ci && npm --prefix frontend ci`,
+  `npm run build:addon`, `npm run build:web`, `npm run build:app`,
+  `npm run typecheck`, `npm test` all green (the chassis suite plus the
+  governance service: 55 passed / 11 skipped at import time; the 11 are
+  the CoreLedger Postgres arm, which auto-skips without a live database
+  and gets CI coverage in spec 003). `cargo test --no-default-features`
+  in addon/governance-native/ stays green (22).
+- `npm run dev` boots; `GET /health` and `GET /hiq/health` return 200,
+  and the governance service answers (`GET /governance/verify` -> ok).
 - verify.yml runs green on main.
 - `spec-spine lint --fail-on-warn` and `spec-spine index check` green.
 
