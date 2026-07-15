@@ -3,7 +3,7 @@ id: "007-governance-webapp"
 title: "Governance UI: Vite + React Router v7 webapp"
 status: approved
 created: "2026-07-14"
-implementation: pending
+implementation: in-progress
 depends_on:
   - "004-tenants-github-app"
 establishes:
@@ -26,7 +26,25 @@ summary: >
 chassis import, spec 002, is deleted). New package name
 `@stagecraft/webapp`, spec-spine manifest key -> this spec. Keep the
 build contract identical: `npm --prefix webapp run build` emits into
-`web/dist`; the web static service (chassis) is untouched.
+`backend/web/dist` (the path the chassis web static service serves);
+that static service is untouched.
+
+The `frontend/` -> `webapp/` rename also disturbs governance-owned build
+and CI surfaces (spec 002, plus `spec-spine.toml`, which spec 000 owns),
+carried in this PR under a `Spec-Drift-Waiver:` (007 supersedes the 002
+placeholder; those owning specs are not amended to ratify a rename they
+did not author):
+
+- the root configs repoint their SPA-directory reference from
+  `frontend` to `webapp`: `package.json` (`dev:web` / `build:web`
+  scripts), `tsconfig.json` (the `exclude` entry that keeps the SPA out
+  of the backend `tsc`), and `vitest.config.ts` (the test `exclude`
+  glob).
+- `.github/workflows/verify.yml`: the frontend cache path and the
+  `npm --prefix frontend ci` step repoint to `webapp`, and a `webapp`
+  component-test step is added (§3).
+- `spec-spine.toml`: `standalone_npm_packages` swaps `frontend` for
+  `webapp`.
 
 ## 2. Behavior
 
@@ -73,3 +91,40 @@ build contract identical: `npm --prefix webapp run build` emits into
   adds the UI once the shape exists).
 - Design-system investment, theming, mobile polish.
 - Admin/ops views beyond the fleet table.
+
+## 5. Status (2026-07-15)
+
+Implementation landed, built, unit-tested, and gated; kept `in-progress`
+pending two acceptance items that need state this session could not
+produce.
+
+Verified against a live local control plane (`encore run` on :4000, the
+webapp dev server on :5173, CoreLedger on Postgres, mock auth driver):
+
+- The full §3 login-to-detail request/response contract, end to end:
+  unauthenticated `GET /api/v1/auth/me` 401 (the root loader's redirect
+  trigger); mock login 302 + session cookies; authenticated `me`;
+  `GET /api/v1/auth/csrf-token`; `POST /api/v1/tenants` (CSRF
+  double-submit); `GET /api/v1/tenants`; `GET /api/v1/tenants/:id`;
+  `GET .../github/install-url`. Every response shape matches the
+  webapp's typed client exactly.
+- `npm --prefix webapp run build` emits `backend/web/dist`; both the dev
+  server (:5173) and the served bundle (:4000) render the SPA.
+- vitest component tests (auth-loader redirect + login route) pass; the
+  spine gates (compile, index check, lint, couple with the waiver) and
+  the CI govern gate are green.
+
+Remaining before `complete`:
+
+- The literal in-browser §3.1 click-through (login -> create tenant ->
+  tenant detail through the rendered SPA) was not performed this
+  session: the browser-automation extension was not connected. The
+  underlying API flow is verified above; only the pixel-level walk is
+  outstanding.
+- §3.2 (launching a stamp shows live job progression) needs a real
+  GitHub App installation into a real org: a tenant with an active
+  installation whose org matches the target (spec 005 enforces this).
+  That is external state, not producible locally without installing the
+  Stagecraft GitHub App into a live org. The stamp launcher and
+  progress-polling UI are wired to spec 005's real endpoints and shapes;
+  they light up once a real installation exists.

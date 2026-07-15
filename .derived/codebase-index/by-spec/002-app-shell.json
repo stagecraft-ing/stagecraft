@@ -57,10 +57,6 @@
         "source": "spec-edge"
       },
       {
-        "path": "frontend",
-        "source": "manifest-metadata"
-      },
-      {
         "path": "frontend/",
         "source": "spec-edge"
       },
@@ -376,5 +372,5 @@
     "specStatus": "approved"
   },
   "schemaVersion": "1.1.0",
-  "shardHash": "8f98306ad07325e79797a4b2cc9da9a7f79d259240ff42ea63b1bd3d722e1e59"
+  "shardHash": "d04274e60746fe48bb6b18bc18ce0bd92de72d8b2d9ad9027139d265f7399930"
 }
