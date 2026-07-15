@@ -144,7 +144,12 @@ enrahitu 018 §4 delegated to the first stamped consumer.
 - Later service specs extend the 002-owned root config in place (amended
   here as they land): spec 003 adds the `dev:db` script (package.json) and
   a Postgres service arm in `verify.yml`, wiring CoreLedger onto Postgres
-  via `ENRAHITU_LEDGER_URL` while stamped apps stay on libSQL.
+  via `ENRAHITU_LEDGER_URL` while stamped apps stay on libSQL. Spec 004
+  adds the three GitHub App secrets (`GITHUB_APP_ID`,
+  `GITHUB_APP_PRIVATE_KEY_B64`, `GITHUB_WEBHOOK_SECRET`) to
+  `infra.config.json`'s `secrets` block so the deployed control plane
+  binds them from env; dev leaves them unset (the tenants service reads
+  `process.env` as a local fallback).
 
 ## 4. Acceptance
 

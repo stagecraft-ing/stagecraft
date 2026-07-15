@@ -3,12 +3,12 @@ id: "004-tenants-github-app"
 title: "Tenants: OAuth login + per-org GitHub App installation"
 status: approved
 created: "2026-07-14"
-implementation: pending
+implementation: in-progress
 depends_on:
   - "002-app-shell"
   - "003-postgres-adoption"
 establishes:
-  - { kind: directory, path: "tenants/" }
+  - { kind: directory, path: "backend/tenants/" }
 summary: >
   The tenancy spine of milestone M2: a user authenticates against the
   control plane (embedded rauthy, chassis auth), creates a tenant, and
@@ -51,7 +51,11 @@ Use the existing GitHub App; do not create a new one:
 
 ## 2. Territory
 
-`tenants/`: an Encore.ts service: `encore.service.ts`, api endpoints,
+`backend/tenants/`: an Encore.ts service. It lives under `backend/`
+per the chassis convention that spec 002 established and spec 008
+followed (the thesis's illustrative `tenants/` path predates the
+slimmed two-directory layout; corrected here before coding, design
+truth precedes code). Files: `encore.service.ts`, api endpoints,
 CoreLedger entities, github-app token helper, webhook endpoint.
 
 ## 3. Behavior
