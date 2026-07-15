@@ -141,6 +141,10 @@ enrahitu 018 §4 delegated to the first stamped consumer.
   extra_hashed_inputs` gains the chassis manifests (the root and
   frontend package.json, the infra configs) so edits trip staleness here
   too.
+- Later service specs extend the 002-owned root config in place (amended
+  here as they land): spec 003 adds the `dev:db` script (package.json) and
+  a Postgres service arm in `verify.yml`, wiring CoreLedger onto Postgres
+  via `ENRAHITU_LEDGER_URL` while stamped apps stay on libSQL.
 
 ## 4. Acceptance
 

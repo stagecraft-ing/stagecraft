@@ -2,9 +2,10 @@
 # in CI, the same builds a stamped app's toolchain performs. The
 # governance-native addon (spec 008) is built from source (napi/cargo); the
 # Encore toolchain and the hiqlite addon resolve as prebuilt binaries from the
-# pinned @enrahitu/* packages (no vendored runtime build, no protoc). The
-# CoreLedger Postgres-driver arm auto-skips here; its CI coverage lands with
-# spec 003 (Postgres adoption).
+# pinned @enrahitu/* packages (no vendored runtime build, no protoc). A
+# Postgres service backs the CoreLedger Postgres-driver arm (spec 003): the
+# parameterized ledger suite runs on both drivers every CI run via
+# TEST_POSTGRES_URL, so "scaling is a driver swap" stays continuously proven.
 name: verify
 on:
   push:
@@ -19,6 +20,20 @@ concurrency:
 jobs:
   verify:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: stagecraft
+          POSTGRES_PASSWORD: stagecraft
+          POSTGRES_DB: stagecraft_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U stagecraft -d stagecraft_test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
       - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
@@ -47,5 +62,7 @@ jobs:
         run: npm run build:web
       - name: Build app (generates encore.gen)
         run: npm run build:app
-      - name: Typecheck and test
+      - name: Typecheck and test (both CoreLedger drivers)
+        env:
+          TEST_POSTGRES_URL: postgres://stagecraft:stagecraft@localhost:5432/stagecraft_test
         run: npm run typecheck && npm test

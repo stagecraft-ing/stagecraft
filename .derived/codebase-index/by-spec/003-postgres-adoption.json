@@ -1,22 +1,38 @@
 {
-  "diagnostics": {
-    "errors": [],
-    "warnings": [
-      {
-        "code": "W-001",
-        "message": "spec '003-postgres-adoption' file unit 'docker/compose.postgres.yml' does not exist",
-        "path": "docker/compose.postgres.yml"
-      }
-    ]
-  },
   "mapping": {
     "dependsOn": [
       "002-app-shell"
     ],
-    "implementingPaths": [],
+    "implementingPaths": [
+      {
+        "path": ".env.example",
+        "source": "spec-edge"
+      },
+      {
+        "path": "docker/compose.postgres.yml",
+        "source": "spec-edge"
+      }
+    ],
     "resolvedUnits": [
       {
-        "locations": [],
+        "locations": [
+          {
+            "file": ".env.example"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".env.example"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "docker/compose.postgres.yml"
+          }
+        ],
         "ownership": true,
         "sourceField": "establishes",
         "unit": {
@@ -29,5 +45,5 @@
     "specStatus": "approved"
   },
   "schemaVersion": "1.1.0",
-  "shardHash": "4e7ff4e3350a6304e788bd120999edff4c147f0416e8f58eedc4269eb9e1e5a5"
+  "shardHash": "8704b2de7d9dd50779a88b02bed66db03f407ec9736c0b47fc6047154c1b87b8"
 }

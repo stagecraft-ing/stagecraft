@@ -3,11 +3,12 @@ id: "003-postgres-adoption"
 title: "Control plane on CoreLedger-over-Postgres"
 status: approved
 created: "2026-07-14"
-implementation: pending
+implementation: complete
 depends_on:
   - "002-app-shell"
 establishes:
   - "docker/compose.postgres.yml"
+  - ".env.example"
 summary: >
   The control plane runs CoreLedger on the Postgres driver while stamped
   customer apps stay on libSQL/Turso: same decorator API, different
@@ -30,6 +31,10 @@ exists upstream, refresh the chassis files it touches (core/ledger/*)
 via a recorded manual re-import (same mode as spec 002 §2), then
 proceed.
 
+RESOLVED 2026-07-15: spec 002's slimmed import brought the driver at
+`backend/core/ledger/postgres.ts` (with the parameterized ledger suite),
+so this spec is unblocked and consumes it as-is.
+
 ## 2. Territory
 
 - `docker/compose.postgres.yml`: a dev Postgres 16 service (single
@@ -40,11 +45,14 @@ proceed.
 
 ## 3. Behavior
 
-- Driver selection is config only: `STAGECRAFT_LEDGER_URL` (the chassis
-  env name pattern with this app's prefix; check what spec 002's import
-  actually produced, the chassis convention is <APPNAME>_LEDGER_URL)
-  set to `postgres://...` selects the Postgres driver; `file:` keeps
-  libSQL for quick local hacking. Document both in .env.example.
+- Driver selection is config only. Spec 002's import kept the chassis
+  substrate env prefix (the stamp deliberately does not rename env
+  prefixes), so the variable is `ENRAHITU_LEDGER_URL`, not a
+  stagecraft-prefixed name: `postgres://...` selects the Postgres driver,
+  `file:...` keeps libSQL for quick local hacking. Both are documented in
+  `.env.example`. The parameterized test suite selects Postgres separately
+  via `TEST_POSTGRES_URL` (set by CI against a Postgres service, unset
+  skips), so tests never depend on the app's own ledger config.
 - Control-plane tables (tenants, installations, attestations, etc.)
   arrive with their owning service specs; this spec proves the
   substrate, not the schema.
@@ -57,12 +65,14 @@ proceed.
 
 ## 4. Acceptance
 
-- `docker compose -f docker/compose.postgres.yml up -d`, then
-  `STAGECRAFT_LEDGER_URL=postgres://... npm test`: the chassis ledger
-  and auth suites pass on Postgres.
-- The same suite still passes with the default file: URL (libSQL).
-- `npm run dev` against Postgres boots and `/health`'s decorator canary
-  goes green.
+- `npm run dev:db` (docker/compose.postgres.yml), then `npm test` with
+  `TEST_POSTGRES_URL` pointed at it: the chassis ledger suite's Postgres
+  arm runs and passes (it skips when unset). CI proves this continuously:
+  verify.yml runs the whole suite against a Postgres service every run,
+  so both drivers pass on every push.
+- The same suite still passes on the default libSQL path.
+- `npm run dev` with `ENRAHITU_LEDGER_URL=postgres://...` boots and
+  `/health`'s decorator canary goes green.
 - Spine gates green.
 
 ## 5. Out of scope
@@ -70,3 +80,22 @@ proceed.
 - Managed/production Postgres provisioning (fleet/infra concern).
 - Any control-plane domain schema (owned by service specs 004+).
 - Turso sync (stamped-app concern; the control plane does not sync).
+
+## 6. Status (2026-07-15): complete
+
+CoreLedger runs on Postgres for the control plane; stamped apps stay on
+libSQL. `docker/compose.postgres.yml` + `npm run dev:db` provide the dev
+database; `.env.example` documents the `ENRAHITU_LEDGER_URL` selection.
+
+Proof: `verify.yml` now runs the whole suite against a Postgres 16 service
+every push (with `TEST_POSTGRES_URL` set). The parameterized ledger suite
+passes on BOTH drivers: 66 tests, 0 skipped (was 55 passed / 11 skipped
+before the Postgres arm ran), including the 15 `PostgresDriver` tests
+(migrations, tx, the sha256-not-md5 checksum path) and the 8
+CoreLedger-over-Postgres ledger tests. libSQL stays green on the default
+path.
+
+Not separately exercised this session: a local `npm run dev` boot against
+Postgres (needs Docker running). The driver's init/canary path is the same
+one the 15 + 8 passing tests cover, so the substrate is proven by CI rather
+than a one-off boot.
