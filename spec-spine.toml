@@ -14,6 +14,12 @@ allowed = []   # empty: the `kind` field is free-text / disabled
 specs_dir     = "specs"
 derived_dir   = ".derived"
 standards_dir = "standards/spec"
+# The governance napi addon (spec 008) is a standalone Rust crate and npm
+# package: no root Cargo workspace or npm workspace exists in this repo yet
+# (the app shell, spec 002, brings the root package.json). Its manifests carry
+# the spec-spine key -> 008.
+standalone_rust_workspaces = ["addon/governance-native"]
+standalone_npm_packages    = ["addon/governance-native"]
 
 [index]
 # Governance surfaces beyond the always-hashed core. Service manifests are

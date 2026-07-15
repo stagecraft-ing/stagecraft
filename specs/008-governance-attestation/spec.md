@@ -3,7 +3,7 @@ id: "008-governance-attestation"
 title: "Governance spine: attestation ledger + action gate + trust window"
 status: approved
 created: "2026-07-14"
-implementation: pending
+implementation: in-progress
 depends_on:
   - "001-stagecraft-thesis"
 establishes:
@@ -120,3 +120,62 @@ warn-and-proceed for read-class; never silently skip a gate.
   key rotation ceremonies.
 - The approvals human-workflow UI (data shape lands here; UI is a
   follow-up to spec 007).
+
+## 6. Status (2026-07-14)
+
+`implementation: in-progress`. Taken ahead of the app shell under the
+AGENTS.md backlog exception (008's addon + service may start first; the
+service wiring rebases onto the shell when spec 002 lands). The addon is
+complete and green; the Encore service is authored against the chassis idiom
+and awaits the shell to typecheck and run.
+
+**Implementation decisions** (refine §2/§3, do not contradict them):
+
+- **Crate consumption.** All four crates verified live on crates.io and
+  pinned exactly: `canonical-keysort-json`, `attest-ledger-types`,
+  `attest-ledger-core`, `action-gate-types`, `action-gate-core`,
+  `trust-window`, all `=0.1.0`. No git deps (§1 honoured).
+- **The addon owns the ledger file store.** `attest-ledger` is
+  storage-agnostic, so `addon/governance-native/` defines the layout:
+  `<stateDir>/records.jsonl` (one `LedgerRecord` per line, the authority) +
+  `<stateDir>/anchor.json` (the genesis anchor, unsigned until
+  `ledgerAnchor` signs it with an operator Ed25519 seed). `seq` is the
+  0-based line index; the chain head after an append equals that record's
+  hash. Genesis root is `sha256("stagecraft.governance.ledger/v1")`.
+- **The addon owns the gate config schema and the four checks.**
+  `action-gate` ships the ordered-registry machinery but no config model
+  and none of the v1 checks, so `GateConfigV1` (an ordered id list) and
+  `posture-required` / `confirm-name-required` / `tenant-active` /
+  `actor-authenticated` are implemented here, reading `ActionContext`
+  attributes. The committed `governance/config/gate.v1.json` keeps the spec
+  order; its stable config hash
+  (`sha256:a0356df3a1d2ca95a030e1d9329a7ceb20a54fc1ed1834dd0b158047c306f107`)
+  is pinned by an addon test so config drift shows up in review (§2).
+- **Trust envelope.** `trust-window` keeps config and snapshot separate; the
+  addon's snapshot JSON embeds both so a snapshot round-trips its own
+  configuration (and the degrade-only latch) across stateless calls.
+- **napi test linkage.** The `#[napi]` bindings sit behind a default `node`
+  feature; `cargo test --no-default-features` exercises the pure logic
+  without linking the Node C API.
+
+**Landed:** `addon/governance-native/` (the six-function napi surface over the
+four crates, `cargo build` green as a cdylib and `cargo test
+--no-default-features` green: 22 tests covering canonicalize vectors,
+append/verify tamper detection, gate determinism + pinned config hash, trust
+level transitions, and the §4 gate→append→verify flow); `governance/` (the
+Encore service: records/verify/gate/trust endpoints, the CoreLedger index and
+trust store, the native facade, config); `governance/config/gate.v1.json`;
+`spec-spine.toml` standalone lists. Spine gates green (compile, index, lint
+`--fail-on-warn`, index check) with zero waivers.
+
+**Remaining (blocks `complete`), all gated on the app shell (spec 002):**
+
+- The service cannot typecheck, run, or be vitest-tested until the chassis
+  provides `encore.dev/*`, CoreLedger (`../core/ledger`, spec 003), the root
+  npm package, and the built `@stagecraft/governance-native` `.node`. On 002:
+  add the addon as a dependency, `npm run build` it, and the authored
+  `governance/records.test.ts` (record round-trip + index row + independent
+  payloadHash + gate deny) runs green.
+- Acceptance items still open until then: the service tests (§4 bullet 2) and
+  the verify verb (§4 bullet 4) over the shell; the born-with certHash
+  cross-check (§3) lands with the factory (spec 005).

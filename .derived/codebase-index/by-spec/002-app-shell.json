@@ -29,11 +29,6 @@
       },
       {
         "code": "W-001",
-        "message": "spec '002-app-shell' directory unit 'addon/' is not a directory",
-        "path": "addon/"
-      },
-      {
-        "code": "W-001",
         "message": "spec '002-app-shell' directory unit 'core/' is not a directory",
         "path": "core/"
       },
@@ -88,10 +83,19 @@
     "dependsOn": [
       "001-stagecraft-thesis"
     ],
-    "implementingPaths": [],
+    "implementingPaths": [
+      {
+        "path": "addon/",
+        "source": "spec-edge"
+      }
+    ],
     "resolvedUnits": [
       {
-        "locations": [],
+        "locations": [
+          {
+            "file": "addon/"
+          }
+        ],
         "ownership": true,
         "sourceField": "establishes",
         "unit": {
@@ -239,5 +243,5 @@
     "specStatus": "approved"
   },
   "schemaVersion": "1.1.0",
-  "shardHash": "3f6d5bb0c8534b1ac247ec1959817eae4617c679a52169edb09b3db328a404bf"
+  "shardHash": "a833088d9d31afeeb66a28c699c83d67f8c42c35bd7805595f947d8e2eb880e3"
 }
