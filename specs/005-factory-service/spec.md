@@ -94,6 +94,13 @@ CoreLedger entities, template cache, stamp pipeline.
 
 ## 5. Out of scope
 
+- Signed certificates (born-with certVersion 2, enrahitu spec 012 §7):
+  emission through the vended tenant-emit CLI with a platform-minted
+  Ed25519 key set as a repo CI secret at repo creation (the mint sits
+  on the spec 004/005 boundary when this lands), repo-side
+  re-verification via pinned tenant-tail, and the spec 008 ledger
+  anchor as the countersign. Step 3 above is the unsigned v1 flow by
+  design.
 - Deployment of the stamped app (fleet, spec 006).
 - Template authoring, flavors' contents (enrahitu repo).
 - Multi-template support (one pinned chassis for now).
