@@ -1,0 +1,12 @@
+{
+  "package": {
+    "edition": "2021",
+    "kind": "rust-lib",
+    "name": "governance-native",
+    "path": "addon/governance-native",
+    "specRef": "008-governance-attestation",
+    "version": "0.1.0"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "96200c5e16a90818f9a8ca6c297d0f7ddf43f62c33ad4cd86eb8d3aefcb9fc18"
+}

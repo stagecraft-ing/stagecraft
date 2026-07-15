@@ -1,27 +1,29 @@
 {
-  "diagnostics": {
-    "errors": [],
-    "warnings": [
-      {
-        "code": "W-001",
-        "message": "spec '008-governance-attestation' directory unit 'governance/' is not a directory",
-        "path": "governance/"
-      },
-      {
-        "code": "W-001",
-        "message": "spec '008-governance-attestation' directory unit 'addon/governance-native/' is not a directory",
-        "path": "addon/governance-native/"
-      }
-    ]
-  },
   "mapping": {
     "dependsOn": [
       "001-stagecraft-thesis"
     ],
-    "implementingPaths": [],
+    "implementingPaths": [
+      {
+        "path": "addon/governance-native",
+        "source": "manifest-metadata"
+      },
+      {
+        "path": "addon/governance-native/",
+        "source": "spec-edge"
+      },
+      {
+        "path": "governance/",
+        "source": "spec-edge"
+      }
+    ],
     "resolvedUnits": [
       {
-        "locations": [],
+        "locations": [
+          {
+            "file": "addon/governance-native/"
+          }
+        ],
         "ownership": true,
         "sourceField": "establishes",
         "unit": {
@@ -30,7 +32,11 @@
         }
       },
       {
-        "locations": [],
+        "locations": [
+          {
+            "file": "governance/"
+          }
+        ],
         "ownership": true,
         "sourceField": "establishes",
         "unit": {
@@ -43,5 +49,5 @@
     "specStatus": "approved"
   },
   "schemaVersion": "1.1.0",
-  "shardHash": "e083d7ec425f65d0226381cf123dcac49f87f1c8f5abeced94c2df29b03dcf9f"
+  "shardHash": "db437ff9198386576ef9c69dc694374e15daf29e0ef7da39d9e2dbfce5f384e3"
 }
