@@ -8,10 +8,14 @@
       {
         "kind": "file",
         "path": "docker/compose.postgres.yml"
+      },
+      {
+        "kind": "file",
+        "path": ".env.example"
       }
     ],
     "id": "003-postgres-adoption",
-    "implementation": "pending",
+    "implementation": "in-progress",
     "sectionHeadings": [
       "003: Postgres adoption",
       "1. Cross-repo dependency (read first)",
@@ -25,6 +29,6 @@
     "summary": "The control plane runs CoreLedger on the Postgres driver while stamped customer apps stay on libSQL/Turso: same decorator API, different driver, selected by URL scheme. The driver itself is enrahitu spec 011 and lives in the chassis (core/ledger/postgres.ts); this spec is the consuming side: local Postgres for dev, config wiring, the migration posture for control-plane tables, and proof that the whole chassis test suite passes on both drivers inside this repo.\n",
     "title": "Control plane on CoreLedger-over-Postgres"
   },
-  "shardHash": "7390ad90bb11fb824e688319c072bbb4e6b6c66d7e6f936338c11c76dc909565",
+  "shardHash": "93281379bbee26a05f957803e74e349107911fbaa69653094fd21a5e666112a4",
   "specVersion": "1.1.0"
 }

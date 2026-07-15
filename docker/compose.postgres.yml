@@ -1,0 +1,30 @@
+# Dev Postgres for the control plane (spec 003). CoreLedger runs its
+# Postgres driver here (enrahitu spec 011, backend/core/ledger/postgres.ts)
+# while stamped customer apps stay on libSQL/Turso: same decorator API,
+# different driver, selected by the ENRAHITU_LEDGER_URL scheme. Host port
+# 5433 avoids collisions with a system Postgres on 5432. Single container,
+# named volume; production Postgres is a fleet/infra concern (out of scope).
+#
+# Start with: npm run dev:db
+# Then point the app at it:
+#   ENRAHITU_LEDGER_URL=postgres://stagecraft:stagecraft@localhost:5433/stagecraft
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: stagecraft-postgres
+    environment:
+      POSTGRES_USER: stagecraft
+      POSTGRES_PASSWORD: stagecraft
+      POSTGRES_DB: stagecraft
+    ports:
+      - "5433:5432"
+    volumes:
+      - stagecraft-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U stagecraft -d stagecraft"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  stagecraft-pgdata:
