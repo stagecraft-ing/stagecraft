@@ -1,0 +1,40 @@
+{
+  "name": "stagecraft",
+  "version": "0.1.0",
+  "private": true,
+  "license": "AGPL-3.0",
+  "spec-spine": { "spec": "002-app-shell" },
+  "type": "module",
+  "description": "Stagecraft: the governed agentic delivery control plane, stamped as an EnRaHiTu app (spec 002). Encore.ts services on the slimmed enrahitu chassis (@enrahitu/toolchain + @enrahitu/hiqlite-native), plus the governance spine addon (spec 008).",
+  "engines": { "node": ">=24" },
+  "scripts": {
+    "dev": "enrahitu-dev",
+    "build:app": "enrahitu-build",
+    "build:addon": "npm --prefix addon/governance-native install && npm --prefix addon/governance-native run build",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests",
+    "generate-keys": "tsx scripts/generate-keys.ts",
+    "dev:idp": "docker compose -f docker/compose.dev.yml up -d && node scripts/sync-dev-rauthy-secret.mjs",
+    "dev:idp-secret": "node scripts/sync-dev-rauthy-secret.mjs",
+    "dev:web": "npm --prefix frontend run dev",
+    "build:web": "npm --prefix frontend run build"
+  },
+  "dependencies": {
+    "@enrahitu/hiqlite-native": "0.1.0",
+    "@stagecraft/governance-native": "file:./addon/governance-native",
+    "@libsql/client": "^0.17.4",
+    "encore.dev": "^1.57.9",
+    "jsonwebtoken": "^9.0.3",
+    "openid-client": "^6.8.4",
+    "pg": "^8.22.0"
+  },
+  "devDependencies": {
+    "@enrahitu/toolchain": "0.1.0",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^26.0.1",
+    "@types/pg": "^8.20.0",
+    "tsx": "^4.19.2",
+    "typescript": "^6.0.3",
+    "vitest": "^4.0.18"
+  }
+}

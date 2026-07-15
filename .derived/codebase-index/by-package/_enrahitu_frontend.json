@@ -1,0 +1,11 @@
+{
+  "package": {
+    "kind": "npm-package",
+    "name": "@enrahitu/frontend",
+    "path": "frontend",
+    "specRef": "002-app-shell",
+    "version": "0.1.0"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "0d26762921401b80dc9a263f8f340a5adcb1bf5498e623347682e9b6b5ef125e"
+}

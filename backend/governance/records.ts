@@ -11,7 +11,7 @@
 import { randomUUID } from "node:crypto";
 import { api } from "encore.dev/api";
 
-import { GOVERNANCE_STATE_DIR } from "./config";
+import { governanceStateDir } from "./config";
 import native from "./native";
 import { attestations, initStore, Attestation } from "./store";
 
@@ -69,7 +69,7 @@ export const record = api(
     };
 
     const appended = native.ledgerAppend(
-      GOVERNANCE_STATE_DIR,
+      governanceStateDir(),
       JSON.stringify(chainRecord),
     );
 
@@ -93,8 +93,25 @@ interface ListRequest {
   subject: string;
 }
 
+/**
+ * Wire shape of one indexed attestation. Mirrors the CoreLedger `Attestation`
+ * entity's columns, but is declared as a plain interface: Encore's schema
+ * parser does not accept a decorated entity class as an API response type
+ * ("class types are not yet supported in schemas"). The entity instances are
+ * structurally assignable to this shape, so no runtime mapping is needed.
+ */
+interface AttestationRecord {
+  recordSeq: number;
+  kind: string;
+  subject: string;
+  recordHash: string;
+  payloadHash: string;
+  actor: string;
+  createdAt: Date;
+}
+
 interface ListResponse {
-  records: Attestation[];
+  records: AttestationRecord[];
 }
 
 // GET /governance/records?subject=... : list index rows for a subject.
@@ -118,7 +135,7 @@ interface VerifyResponse {
 export const verify = api(
   { expose: true, method: "GET", path: "/governance/verify" },
   async (): Promise<VerifyResponse> => {
-    const result = native.ledgerVerify(GOVERNANCE_STATE_DIR);
+    const result = native.ledgerVerify(governanceStateDir());
     return { ok: result.ok, seq: result.seq, error: result.error };
   },
 );

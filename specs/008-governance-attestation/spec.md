@@ -3,11 +3,11 @@ id: "008-governance-attestation"
 title: "Governance spine: attestation ledger + action gate + trust window"
 status: approved
 created: "2026-07-14"
-implementation: in-progress
+implementation: complete
 depends_on:
   - "001-stagecraft-thesis"
 establishes:
-  - { kind: directory, path: "governance/" }
+  - { kind: directory, path: "backend/governance/" }
   - { kind: directory, path: "addon/governance-native/" }
 summary: >
   The platform's tamper-evident memory and its decision spine, built on
@@ -179,3 +179,28 @@ trust store, the native facade, config); `governance/config/gate.v1.json`;
 - Acceptance items still open until then: the service tests (§4 bullet 2) and
   the verify verb (§4 bullet 4) over the shell; the born-with certHash
   cross-check (§3) lands with the factory (spec 005).
+
+**Status (2026-07-15): complete.** Rebased onto the app shell (spec 002)
+in the same landing. The service moved from repo-root `governance/` to
+`backend/governance/` (the two-directory layout, enrahitu spec 019): its
+`../core/ledger` import now resolves to `backend/core/ledger` and Encore
+discovers it as a service. The root `package.json` carries
+`@stagecraft/governance-native` as a `file:` dep built by `build:addon`;
+`native.ts` imports the built `.node`.
+
+Wiring adjustments made on the rebase (faithful to §2/§3, no behavior
+change): the list response uses a plain `AttestationRecord` DTO (Encore's
+schema parser rejects a decorated CoreLedger entity as a response type);
+the gate-config and state-dir paths resolve from the app root
+(`process.cwd()`), not `import.meta.url`, because enrahitu-build runs the
+bundled app from `.encore/build/combined/` (mirrors the chassis's own
+`backend/lib/secrets.ts`); the pinned gate-config hash is byte-unchanged.
+
+Acceptance now holds: `npm run typecheck` and `npm test` are green,
+including `backend/governance/records.test.ts` (record round-trip + index
+row + independent payloadHash + gate deny + the §4 gate->append->verify
+flow); `cargo test --no-default-features` stays green (22); `npm run dev`
+serves `/governance/verify` (ok), `/governance/records`, and
+`/governance/trust/:actor`. Deferred by design: the born-with certHash
+cross-check (§3) lands with the factory (spec 005); trust-level
+enforcement stays advisory (§5).

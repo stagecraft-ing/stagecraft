@@ -7,7 +7,7 @@
     "establishes": [
       {
         "kind": "directory",
-        "path": "governance/"
+        "path": "backend/governance/"
       },
       {
         "kind": "directory",
@@ -15,7 +15,7 @@
       }
     ],
     "id": "008-governance-attestation",
-    "implementation": "in-progress",
+    "implementation": "complete",
     "sectionHeadings": [
       "008: Governance: attestation, gating, trust",
       "1. Crate dependencies (read first)",
@@ -30,6 +30,6 @@
     "summary": "The platform's tamper-evident memory and its decision spine, built on the four crates extracted from OAP's policy-kernel: attest-ledger (tamper-evident record chain + signed anchors), canonical-keysort-json (byte-identical canonical JSON), action-gate (pure deterministic Gate over an ordered Check registry), and trust-window (rolling-window trust scorer mapping to graduated privilege). A napi-rs addon wraps the Rust crates; a governance/ Encore service exposes record/verify/gate/trust APIs that factory (005) and fleet (006) call at their privileged moments. This is the platform's differentiator: not that it deploys apps, but that every privileged act is gated, recorded, and independently verifiable.\n",
     "title": "Governance spine: attestation ledger + action gate + trust window"
   },
-  "shardHash": "14e20eca78f50b73563b4e42bc1563107a38a08a42ec4def6c34c18999477622",
+  "shardHash": "c447cc2d8fefd1fc22ceaf9ccf53878bbee6f7a09b17887fbff13e83775609fe",
   "specVersion": "1.1.0"
 }

@@ -40,3 +40,26 @@ data/
 .claude/agent-memory/
 
 .worktrees/
+
+# --- EnRaHiTu app shell (spec 002): app/runtime build artifacts ---
+# Encore build output + generated code (single-container app core)
+.encore/
+/.encore
+encore.gen/
+/encore.gen
+encore.gen.go
+encore.gen.cue
+
+# Built SPA bundle: frontend/ builds into backend/web/dist. The `dist` rule
+# above excludes that directory wholesale, so re-include the directory itself
+# and the dev placeholder; real hashed builds (npm run build:web) stay ignored.
+!backend/web/dist/
+backend/web/dist/*
+!backend/web/dist/index.html
+
+# governance-native napi addon (spec 008): built payloads never enter git.
+# (The addon also carries its own .gitignore; these mirror it at the root.)
+addon/governance-native/target/
+addon/governance-native/*.node
+addon/governance-native/index.js
+addon/governance-native/index.d.ts
