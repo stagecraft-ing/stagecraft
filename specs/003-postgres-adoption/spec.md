@@ -3,7 +3,7 @@ id: "003-postgres-adoption"
 title: "Control plane on CoreLedger-over-Postgres"
 status: approved
 created: "2026-07-14"
-implementation: in-progress
+implementation: complete
 depends_on:
   - "002-app-shell"
 establishes:
@@ -80,3 +80,22 @@ so this spec is unblocked and consumes it as-is.
 - Managed/production Postgres provisioning (fleet/infra concern).
 - Any control-plane domain schema (owned by service specs 004+).
 - Turso sync (stamped-app concern; the control plane does not sync).
+
+## 6. Status (2026-07-15): complete
+
+CoreLedger runs on Postgres for the control plane; stamped apps stay on
+libSQL. `docker/compose.postgres.yml` + `npm run dev:db` provide the dev
+database; `.env.example` documents the `ENRAHITU_LEDGER_URL` selection.
+
+Proof: `verify.yml` now runs the whole suite against a Postgres 16 service
+every push (with `TEST_POSTGRES_URL` set). The parameterized ledger suite
+passes on BOTH drivers: 66 tests, 0 skipped (was 55 passed / 11 skipped
+before the Postgres arm ran), including the 15 `PostgresDriver` tests
+(migrations, tx, the sha256-not-md5 checksum path) and the 8
+CoreLedger-over-Postgres ledger tests. libSQL stays green on the default
+path.
+
+Not separately exercised this session: a local `npm run dev` boot against
+Postgres (needs Docker running). The driver's init/canary path is the same
+one the 15 + 8 passing tests cover, so the substrate is proven by CI rather
+than a one-off boot.
