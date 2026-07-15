@@ -1,0 +1,11 @@
+{
+  "package": {
+    "kind": "npm-package",
+    "name": "@stagecraft/webapp",
+    "path": "webapp",
+    "specRef": "007-governance-webapp",
+    "version": "0.1.0"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "4857cdb44d1ab5e02c5e2e144f1b4468c2eb873afc8fd5abfb0e4a8fa9388b3b"
+}

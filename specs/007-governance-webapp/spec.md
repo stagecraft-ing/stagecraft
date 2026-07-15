@@ -3,7 +3,7 @@ id: "007-governance-webapp"
 title: "Governance UI: Vite + React Router v7 webapp"
 status: approved
 created: "2026-07-14"
-implementation: pending
+implementation: in-progress
 depends_on:
   - "004-tenants-github-app"
 establishes:
@@ -26,7 +26,25 @@ summary: >
 chassis import, spec 002, is deleted). New package name
 `@stagecraft/webapp`, spec-spine manifest key -> this spec. Keep the
 build contract identical: `npm --prefix webapp run build` emits into
-`web/dist`; the web static service (chassis) is untouched.
+`backend/web/dist` (the path the chassis web static service serves);
+that static service is untouched.
+
+The `frontend/` -> `webapp/` rename also disturbs governance-owned build
+and CI surfaces (spec 002, plus `spec-spine.toml`, which spec 000 owns),
+carried in this PR under a `Spec-Drift-Waiver:` (007 supersedes the 002
+placeholder; those owning specs are not amended to ratify a rename they
+did not author):
+
+- the root configs repoint their SPA-directory reference from
+  `frontend` to `webapp`: `package.json` (`dev:web` / `build:web`
+  scripts), `tsconfig.json` (the `exclude` entry that keeps the SPA out
+  of the backend `tsc`), and `vitest.config.ts` (the test `exclude`
+  glob).
+- `.github/workflows/verify.yml`: the frontend cache path and the
+  `npm --prefix frontend ci` step repoint to `webapp`, and a `webapp`
+  component-test step is added (§3).
+- `spec-spine.toml`: `standalone_npm_packages` swaps `frontend` for
+  `webapp`.
 
 ## 2. Behavior
 

@@ -11,7 +11,7 @@
       }
     ],
     "id": "007-governance-webapp",
-    "implementation": "pending",
+    "implementation": "in-progress",
     "sectionHeadings": [
       "007: Governance webapp",
       "1. Territory",
@@ -24,6 +24,6 @@
     "summary": "Replaces the chassis's placeholder Vue SPA with the control plane's real face: a Vite + React Router v7 single-page app served by the chassis web service from web/dist, same-origin with the API and the embedded rauthy IdP. v1 surface: login, tenant list/create, GitHub App install flow, stamp launcher + job progress, fleet table with operation buttons. The platform UI is deliberately NOT a template flavor: it owes nothing to template stack choices (thesis §3).\n",
     "title": "Governance UI: Vite + React Router v7 webapp"
   },
-  "shardHash": "48fb1f774890855cb9ae8e96f946516a982dc3ef8d3865f24da0457598edd4ed",
+  "shardHash": "6fc3bbe0fe47ad71ed8ca59ab250a7bc8cf6f2f80debbddc78b5bc9bf85cd5a2",
   "specVersion": "1.1.0"
 }
