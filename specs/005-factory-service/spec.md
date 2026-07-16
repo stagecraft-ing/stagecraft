@@ -207,10 +207,13 @@ step, tracked in spec 004's 2026-07-15 amendment. `StampJobView` exposes
 `pages`. The new GitHub helpers (`enablePages`, `setRepoVariable`) are IO like
 the rest of `github.ts`: exercised by the manual E2E, not unit-tested; the
 `StampJob` round-trip covers the new boolean column. typecheck + vitest + spine
-gates green. The default template pin (`FACTORY_TEMPLATE_REF`, config.ts) was
-bumped to enrahitu #16 (`4a4eab1`) in the same effort so the stamped tree
-carries the born-with pages.yml with the base-path fix (enrahitu spec 013); an
-older pin enabled Pages on a repo with no (or a base-path-buggy) pages.yml.
+gates green. The default template pin (`FACTORY_TEMPLATE_REF`, config.ts) is the
+enrahitu v0.2.0 release (`ec29aa7`), advanced from the earlier #16 pin (`4a4eab1`)
+so the stamped tree carries both the born-with pages.yml base-path fix (enrahitu
+spec 013) and the `export-ignore` that strips the ~190K-line vendored toolchain
+from the stamp (enrahitu spec 018). An older pin enabled Pages on a repo with no
+(or a base-path-buggy) pages.yml, or shipped the vendored build-source into the
+customer tree. The pin is a tagged release, not a mid-branch SHA (spec 005 §3).
 
 ## 5. Out of scope
 
