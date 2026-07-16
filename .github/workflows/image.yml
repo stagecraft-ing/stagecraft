@@ -6,9 +6,10 @@
 # Rust cross-build. Only stagecraft's OWN two addons (governance-native,
 # fleet-native) build here, natively.
 #
-# amd64 only: the fleet cluster is x86-64. The runner is ubuntu-22.04 (glibc
-# 2.35) so the natively-built addons link against a glibc no newer than the
-# node:24-slim base image's bookworm (2.36) and load at runtime.
+# amd64 only: the fleet cluster is x86-64. The prebuilt @enrahitu/toolchain-linux-x64
+# binaries (tsparser + runtime) require GLIBC_2.39, so the build runs on
+# ubuntu-24.04 (glibc 2.39) and the image base is node:24-trixie-slim (glibc
+# 2.41 >= 2.39) so the runtime + the natively-built addons all load.
 #
 # NOTE: no /health smoke here. The control plane runs the Postgres driver
 # (spec 003), so it cannot become healthy without a database; runtime
@@ -31,7 +32,7 @@ concurrency:
 
 jobs:
   build-and-push:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
