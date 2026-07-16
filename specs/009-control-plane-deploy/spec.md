@@ -121,7 +121,17 @@ is x86-64), on ubuntu-22.04 (glibc <= the node:24-slim base). No `/health` smoke
 in the image job: the control plane needs Postgres (spec 003) to be healthy, so
 runtime verification moves to the deploy stage. The legacy 002 `docker-build.sh`
 is left untouched (dead code) and gets retired/adapted when the deploy stage
-lands. Validated by running the workflow and pulling the image.
+lands.
+
+Validated (dispatched on a branch, iterated to green): `ghcr.io/stagecraft-ing/stagecraft`
+is published and pullable (`:latest` + `:<sha>`, amd64). Two fixes landed to get
+there: `build:web` needed an explicit `npm --prefix webapp ci` (webapp is not a
+root workspace), and the prebuilt `@enrahitu/toolchain-linux-x64` binaries require
+`GLIBC_2.39`, so the build moved to `ubuntu-24.04` and `docker/Dockerfile.base`
+(spec 002) was bumped `node:24-slim` (bookworm, glibc 2.36) -> `node:24-trixie-slim`
+(glibc 2.41). That 002 chassis touch is waived here (the enrahitu chassis publishes
+2.39 toolchain binaries but a 2.36 base image, an upstream mismatch worth an
+enrahitu follow-up).
 
 ## 5. Out of scope
 

@@ -4,7 +4,10 @@
 # worktree with production node_modules, the built SPA, the compiled bundle
 # under .encore/build, and the cross-built linux encore-runtime.node injected
 # at docker/encore-runtime.node).
-FROM node:24-slim
+# node:24-trixie-slim (Debian trixie, glibc 2.41): the prebuilt
+# @enrahitu/toolchain-linux-x64 runtime + the natively-built stagecraft addons
+# require GLIBC_2.39, which bookworm (2.36) lacks (spec 009).
+FROM node:24-trixie-slim
 
 # node:24-slim ships no system CA store; the encore-built image injected
 # one. Both rauthy (outbound HTTPS at startup) and the app (Turso sync)

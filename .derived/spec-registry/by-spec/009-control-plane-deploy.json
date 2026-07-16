@@ -35,6 +35,6 @@
     "summary": "Give stagecraft its own deployment story so the spec-governed control plane runs on the fleet cluster owned entirely by this repo, with no dependency on the archived open-agentic-platform (OAP) chart or CD. Publish the single-container image to stagecraft's own GHCR namespace, stand it up as a platform-grade K8s deployment reachable at app.stagecraft.ing, seed its own rauthy client, and cut over from the OAP-built stagecraft release. Port the OAP CI tooling worth keeping (AI PR review + changelog, the PR gate pattern), adapted to be OAP-free.\n",
     "title": "Self-hosted control plane deployment (OAP-independent)"
   },
-  "shardHash": "f5fb4142e1574c5a64eff0fcb3bfef890b280de0a8b883c73381cc8c5f6858d1",
+  "shardHash": "7a507149fbdf018da40787e0e4ecac3c5443f65877f5d263648b185c5f929242",
   "specVersion": "1.1.0"
 }
