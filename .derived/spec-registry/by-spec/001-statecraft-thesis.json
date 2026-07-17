@@ -28,6 +28,6 @@
     "summary": "The product thesis and the consolidation record. statecraft is the control plane for governed AI-native software delivery: intent becomes a governed spec, the factory stamps an application from the EnRaHiTu template, the fleet operates the resulting hermetic containers, and the customer's code lives in the customer's GitHub org the entire time. statecraft is itself the first production EnRaHiTu app: one container, embedded rauthy as the platform IdP, hiqlite in-process, CoreLedger for durable state (on Postgres via enrahitu spec 011). This spec records what consolidates here from the OAP era and the milestone ladder that orders the build.\n",
     "title": "statecraft: the governed agentic delivery control plane"
   },
-  "shardHash": "81fb66f65b28a1a0bc705ff42406d90a328b701478bd64a03a5a61297c68376a",
+  "shardHash": "8e61432f586b70a55384e6ede0311ae86d2fa23c17fbf2d44ba4493fa16f1f43",
   "specVersion": "1.1.0"
 }

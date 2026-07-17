@@ -30,6 +30,6 @@
     "summary": "The control plane runs CoreLedger on the Postgres driver while stamped customer apps stay on libSQL/Turso: same decorator API, different driver, selected by URL scheme. The driver itself is enrahitu spec 011 and lives in the chassis (core/ledger/postgres.ts); this spec is the consuming side: local Postgres for dev, config wiring, the migration posture for control-plane tables, and proof that the whole chassis test suite passes on both drivers inside this repo.\n",
     "title": "Control plane on CoreLedger-over-Postgres"
   },
-  "shardHash": "2351c6f58b759dea4827f7887f34d0281693b7d2f6cbc6b92d7952726c1f6f97",
+  "shardHash": "5cf9a6d59b9412d1490ef6f8e6a61b6bf6945b845dddc20fdf6322ad32fd7f7c",
   "specVersion": "1.1.0"
 }
