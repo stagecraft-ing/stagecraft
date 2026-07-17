@@ -1,37 +1,5 @@
 {
-  "permissions": {
-    "allow": [
-      "Bash(spec-spine *)",
-      "Bash(npm run *)",
-      "Bash(npm test*)",
-      "Bash(npm ci*)",
-      "Bash(npm install*)",
-      "Bash(npx *)",
-      "Bash(git status*)",
-      "Bash(git diff*)",
-      "Bash(git log*)",
-      "Bash(git show*)",
-      "Bash(git branch*)",
-      "Bash(git ls-files*)",
-      "Bash(git rev-parse*)",
-      "Bash(git add *)",
-      "Bash(git commit *)",
-      "Bash(ls *)",
-      "Bash(ls)",
-      "Bash(grep *)",
-      "Bash(rg *)",
-      "Read(**)",
-      "Edit(**)"
-    ],
-    "deny": [
-      "Bash(cargo publish*)",
-      "Bash(npm publish*)",
-      "Bash(gh release create *)",
-      "Bash(gh release delete *)",
-      "Bash(gh repo delete *)",
-      "Bash(gh repo archive *)"
-    ]
-  },
+  "permissions": {},
   "hooks": {
     "SessionStart": [
       {
