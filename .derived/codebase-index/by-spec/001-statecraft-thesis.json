@@ -24,9 +24,9 @@
         }
       }
     ],
-    "specId": "001-stagecraft-thesis",
+    "specId": "001-statecraft-thesis",
     "specStatus": "approved"
   },
   "schemaVersion": "1.1.0",
-  "shardHash": "2b632b55c812bf144b4ba5e5110cddc8ef6903178fae32c36d732de592e88309"
+  "shardHash": "32385e6860ed70542d340669987e73d0d4636092a6b908d86e4613873f092db5"
 }

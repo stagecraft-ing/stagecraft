@@ -41,7 +41,7 @@ export function Dashboard() {
         <div className="card empty">
           <p>No tenants yet.</p>
           <p className="muted">
-            A tenant is a customer GitHub org you install the Stagecraft App into. Stamped repos
+            A tenant is a customer GitHub org you install the statecraft App into. Stamped repos
             are born in that org.
           </p>
           <Link className="btn btn-primary" to="/tenants/new">

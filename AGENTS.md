@@ -1,4 +1,4 @@
-# AGENTS.md: stagecraft
+# AGENTS.md: statecraft
 
 This file is the cross-agent session-init protocol authority, read by
 Claude Code, Codex CLI, Cursor, and GitHub Copilot via the AAIF/Linux
@@ -24,7 +24,7 @@ Run these as the first actions of a new session:
    - `spec-spine registry status-report --json --nonzero-only`: lifecycle counts
    - `spec-spine registry list --ids-only`: spec inventory
 
-2. **Orient on the thesis.** `specs/001-stagecraft-thesis/spec.md` §3
+2. **Orient on the thesis.** `specs/001-statecraft-thesis/spec.md` §3
    (service map) and §6 (milestone ladder) define what gets built next
    and in what order.
 
@@ -44,7 +44,7 @@ What remains:
    convention, and retire spec 002's phantom `frontend/` edge. Mechanical
    but wide; see 007's 2026-07-16 status note for the blast radius. It is
    independent of the cluster work, so it can land first as a quick win.
-2. **010 stagecraft cluster** is the main line: the stagecraft-owned
+2. **010 statecraft cluster** is the main line: the statecraft-owned
    hetzner-k3s cluster, Flux GitOps from the in-repo `infra/` tree, SOPS
    secrets, and the platform services. Built alongside the existing
    OAP-named cluster, DNS cut when proven, old cluster deleted after.

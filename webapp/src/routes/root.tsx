@@ -38,7 +38,7 @@ export function Root() {
     <div className="app-shell">
       <header className="topnav">
         <Link to="/" className="brand">
-          stagecraft
+          statecraft
         </Link>
         <nav className="topnav-links">
           <NavLink to="/" end>

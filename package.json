@@ -1,11 +1,11 @@
 {
-  "name": "stagecraft",
+  "name": "statecraft",
   "version": "0.1.0",
   "private": true,
   "license": "AGPL-3.0",
   "spec-spine": { "spec": "002-app-shell" },
   "type": "module",
-  "description": "Stagecraft: the governed agentic delivery control plane, stamped as an EnRaHiTu app (spec 002). Encore.ts services on the slimmed enrahitu chassis (@enrahitu/toolchain + @enrahitu/hiqlite-native), plus the governance spine addon (spec 008).",
+  "description": "statecraft: the governed agentic delivery control plane, stamped as an EnRaHiTu app (spec 002). Encore.ts services on the slimmed enrahitu chassis (@enrahitu/toolchain + @enrahitu/hiqlite-native), plus the governance spine addon (spec 008).",
   "engines": { "node": ">=24" },
   "scripts": {
     "dev": "enrahitu-dev",
@@ -22,8 +22,8 @@
   },
   "dependencies": {
     "@enrahitu/hiqlite-native": "0.1.0",
-    "@stagecraft/governance-native": "file:./addon/governance-native",
-    "@stagecraft/fleet-native": "file:./addon/fleet-native",
+    "@statecraft/governance-native": "file:./addon/governance-native",
+    "@statecraft/fleet-native": "file:./addon/fleet-native",
     "@libsql/client": "^0.17.4",
     "encore.dev": "^1.57.9",
     "jsonwebtoken": "^9.0.3",

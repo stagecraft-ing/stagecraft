@@ -119,8 +119,8 @@ export async function runStampPipeline(jobId: string): Promise<void> {
     } else {
       await v0Substitute(workdir, slots);
       if (certPath) {
-        const dest = join(workdir, ".stagecraft", "born-with.json");
-        await mkdir(join(workdir, ".stagecraft"), { recursive: true });
+        const dest = join(workdir, ".statecraft", "born-with.json");
+        await mkdir(join(workdir, ".statecraft"), { recursive: true });
         await writeFile(dest, await readFile(certPath, "utf8"), "utf8");
       }
     }
@@ -177,7 +177,7 @@ export async function runStampPipeline(jobId: string): Promise<void> {
         base: existing.defaultBranch,
         title: `Adopt the enrahitu chassis (${job.appName})`,
         body:
-          `Stagecraft Factory stamped the enrahitu chassis (contract ${contract.contractVersion}) ` +
+          `statecraft Factory stamped the enrahitu chassis (contract ${contract.contractVersion}) ` +
           `at \`${pinnedSha}\` onto this existing repo. Files unique to the repo are preserved; ` +
           `chassis files were overlaid. Review the diff, then merge.\n\n` +
           (hash ? `Born-with cert hash: \`${hash}\` (anchored in the platform ledger).\n` : ""),

@@ -5,7 +5,7 @@ status: approved
 created: "2026-07-14"
 implementation: complete
 depends_on:
-  - "001-stagecraft-thesis"
+  - "001-statecraft-thesis"
 establishes:
   - "package.json"
   - "package-lock.json"
@@ -26,14 +26,14 @@ establishes:
   - { kind: directory, path: "backend/web/" }
   - { kind: directory, path: "scripts/" }
   - { kind: directory, path: "docker/" }
-  - { kind: directory, path: ".stagecraft/" }
+  - { kind: directory, path: ".statecraft/" }
 summary: >
-  Stagecraft becomes a running EnRaHiTu app: the slimmed chassis from
-  stagecraft-ing/enrahitu is brought into this repo (the two-directory
+  statecraft becomes a running EnRaHiTu app: the slimmed chassis from
+  statecrafting/enrahitu is brought into this repo (the two-directory
   backend/ + frontend/ layout, CoreLedger, auth baseline, rauthy proxy,
   health, packaging, verify workflow; the Encore toolchain and the
   hiqlite addon arrive as pinned @enrahitu/* npm packages, not vendored
-  source), stamped with app name "stagecraft". After this spec the
+  source), stamped with app name "statecraft". After this spec the
   control plane boots, authenticates, and tests green; every later
   service spec (004+) adds Encore services onto this shell. This is
   deliberate dogfooding: the platform is stamped from the same template
@@ -84,7 +84,7 @@ enrahitu 018 §4 delegated to the first stamped consumer.
    generate-keys.ts, sync-dev-rauthy-secret.mjs, verify-born-with.mjs
    and its test, fixtures/). Root files: `encore.app`, `tsconfig.json`,
    `vitest.config.ts`, `vitest.setup.ts`, `infra.config.dev.json`,
-   `infra.config.json`, `.stagecraft/born-with.schema.json`, and a
+   `infra.config.json`, `.statecraft/born-with.schema.json`, and a
    rewritten `.github/workflows/verify.yml`. NOT imported (the slimming,
    spec 019 §1): `vendor/`, `addon/` (enrahitu's hiqlite source),
    `packages/`, `template.toml`, and enrahitu's governance identity
@@ -93,14 +93,14 @@ enrahitu 018 §4 delegated to the first stamped consumer.
    this repo's identity wins. Never import enrahitu's `.env` (a live
    secret). `.gitignore` is merged into this repo's existing one.
 2. The root `package.json` is written fresh, not copied: app name
-   `stagecraft`, `@enrahitu/toolchain` and `@enrahitu/hiqlite-native`
+   `statecraft`, `@enrahitu/toolchain` and `@enrahitu/hiqlite-native`
    pinned to `0.1.0` from the registry (binaries resolve from
    node_modules; no cargo runtime build), plus this repo's own
-   `@stagecraft/governance-native` addon (spec 008) as a `file:` dep and
+   `@statecraft/governance-native` addon (spec 008) as a `file:` dep and
    a `build:addon` script. `npm install` generates the lockfile and
    `npm ci` is reproducible from it (all six @enrahitu platform optionals
    pinned, so linux CI resolves too). `infra.config.*` app_id and the SPA
-   title are stamped to `stagecraft`; substrate names (`@enrahitu/*`,
+   title are stamped to `statecraft`; substrate names (`@enrahitu/*`,
    `ENRAHITU_*` env prefixes) are deliberately left as the chassis.
 3. One enrahitu bug was patched in the imported `vitest.config.ts`: its
    `encoreRuntimeLib()` resolved the Encore runtime only from the

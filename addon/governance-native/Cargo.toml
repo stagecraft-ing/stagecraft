@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 publish = false
 license = "AGPL-3.0"
-description = "Stagecraft's governance spine as a napi-rs addon: canonical JSON, the attest-ledger record chain, the action-gate, and the trust window, exposed to the Encore.ts governance service (spec 008)."
+description = "statecraft's governance spine as a napi-rs addon: canonical JSON, the attest-ledger record chain, the action-gate, and the trust window, exposed to the Encore.ts governance service (spec 008)."
 
 # Standalone crate: no root Cargo workspace exists in this repo. Declaring an
 # empty workspace here pins the workspace root to this directory so cargo never
@@ -21,7 +21,7 @@ crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 # The four governance crates, exact-pinned from crates.io per spec 008 §1
-# (published under the stagecraft-ing org; no git deps).
+# (published under the statecraft-ing org; no git deps).
 canonical-keysort-json = "=0.1.0"
 attest-ledger-types = "=0.1.0"
 attest-ledger-core = "=0.1.0"

@@ -1,18 +1,18 @@
 ---
-id: "010-stagecraft-cluster"
-title: "The stagecraft cluster: Flux GitOps, SOPS secrets, platform services"
+id: "010-statecraft-cluster"
+title: "The statecraft cluster: Flux GitOps, SOPS secrets, platform services"
 status: approved
 created: "2026-07-16"
 implementation: pending
 depends_on:
-  - "001-stagecraft-thesis"
+  - "001-statecraft-thesis"
 establishes:
   - { kind: directory, path: "infra/" }
 summary: >
-  Stagecraft does not own the cluster it runs on: the nodes are named for
+  statecraft does not own the cluster it runs on: the nodes are named for
   OAP, and Flux reconciles this cluster from the open-agentic-platform
-  repository. Build a stagecraft-owned hetzner-k3s cluster alongside the
-  existing one, reconciled by Flux from a stagecraft-owned GitOps tree,
+  repository. Build a statecraft-owned hetzner-k3s cluster alongside the
+  existing one, reconciled by Flux from a statecraft-owned GitOps tree,
   with one documented secret source that generates both the local-dev
   `.env` and the SOPS-encrypted cluster secrets Flux decrypts in-cluster.
   Stand up the platform services (cert-manager, ingress-nginx, rauthy,
@@ -21,26 +21,26 @@ summary: >
   DNS change.
 ---
 
-# 010: The stagecraft cluster
+# 010: The statecraft cluster
 
 ## 1. Purpose
 
-The cluster stagecraft runs on is OAP's. Verified 2026-07-16 against the
+The cluster statecraft runs on is OAP's. Verified 2026-07-16 against the
 live cluster:
 
 - The nodes are `oap-hetzner-master1` and `oap-hetzner-pool-worker-worker1`.
 - Flux's GitRepository is
-  `ssh://git@github.com/stagecraft-ing/open-agentic-platform` (public, **not**
+  `ssh://git@github.com/statecrafting/open-agentic-platform` (public, **not**
   archived, last pushed 2026-07-15). It reconciles cert-manager,
   ingress-nginx, rauthy, monitoring, and reflector into this cluster from
   another product's repository.
 - The cluster carries research-era state: `nsqd`, `minio`, a Postgres whose
-  `stagecraft` database holds OAP's schema (`factory_artifact_substrate` 277
+  `statecraft` database holds OAP's schema (`factory_artifact_substrate` 277
   rows, `audit_log` 143, `users` 3), two OAP sweeper CronJobs failing on
-  roughly a 50% duty cycle, a `stagecraft` Helm release at revision 256, and
+  roughly a 50% duty cycle, a `statecraft` Helm release at revision 256, and
   an ACME http-solver pod stuck for 8 days.
 
-Stagecraft is a greenfield rewrite of the OAP thesis (spec 001 §2). Its
+statecraft is a greenfield rewrite of the OAP thesis (spec 001 §2). Its
 cluster should be one too. Reconciling a product's infrastructure from a
 different product's repository is not a rot emergency (the source repo is
 alive), but it is a correctness and ownership defect, and it blocks the
@@ -58,7 +58,7 @@ starting clean is not.
 - `infra/`: everything infrastructure, owned by this spec.
   - `infra/hetzner/`: cluster provisioning (hetzner-k3s config, node
     pools, the operator bootstrap).
-  - `infra/gitops/clusters/stagecraft-hetzner/`: the Flux entrypoint and
+  - `infra/gitops/clusters/statecraft-hetzner/`: the Flux entrypoint and
     the kustomizations it reconciles.
   - `infra/secrets/catalog.toml`: the single documented secret source.
   - `infra/secrets/*.sops.yaml`: SOPS-encrypted cluster secrets.
@@ -70,7 +70,7 @@ same way it binds a code change, and there is one source of truth rather
 than two. The cost is that Flux needs read access to this repo (a deploy
 key) and reconciles a repo that also holds application code; path-scoped
 kustomizations make that a non-issue. The alternative (a standalone
-`stagecraft-gitops` repo) buys separation but puts the cluster's definition
+`statecraft-gitops` repo) buys separation but puts the cluster's definition
 outside the governance this product sells, which is the wrong trade here.
 
 **Cross-spec touches at implementation.** `.env.example` and
@@ -83,16 +83,16 @@ or a coordinated 002 edit, not by silently widening this spec's territory.
 
 ### Cluster
 
-hetzner-k3s, x86-64, nodes named `stagecraft-hetzner-*`, provisioned
+hetzner-k3s, x86-64, nodes named `statecraft-hetzner-*`, provisioned
 alongside the existing cluster and never sharing its state. The operator
-kubeconfig is `~/.config/stagecraft-ing/infra/hetzner/kubeconfig`; the
+kubeconfig is `~/.config/statecrafting/infra/hetzner/kubeconfig`; the
 operator `.env` is its sibling. Both paths exist and are empty as of
 2026-07-16.
 
 ### GitOps
 
 Flux bootstrapped against this repository at
-`infra/gitops/clusters/stagecraft-hetzner`. Acceptance includes a
+`infra/gitops/clusters/statecraft-hetzner`. Acceptance includes a
 zero-hit grep: no manifest, HelmRelease, or GitRepository on the new cluster
 may reference `open-agentic-platform`.
 
@@ -105,7 +105,7 @@ value. **It holds no values.** From it:
 - **`.env.example`** is generated: commented, documented, committed. The
   catalog carries the prose so the generated artifact does not have to.
 - **The local-dev `.env`** (gitignored, at
-  `~/.config/stagecraft-ing/infra/hetzner/.env`) is validated against the
+  `~/.config/statecrafting/infra/hetzner/.env`) is validated against the
   catalog: missing required keys and unknown keys both fail.
 - **Cluster secrets** are SOPS-encrypted YAML under `infra/secrets/`,
   committed, and decrypted in-cluster by Flux. The `age` private key is
@@ -123,7 +123,7 @@ no cluster today; they are RS256 PEMs produced by `npm run generate-keys`, which
 writes them into a gitignored `keys/` that is deliberately absent from images.
 Spec 009 cannot satisfy "a real login completes" without them. They are
 generated once, written into
-`~/.config/stagecraft-ing/infra/hetzner/.env` alongside every other operator
+`~/.config/statecrafting/infra/hetzner/.env` alongside every other operator
 secret, declared in the catalog, and delivered to the cluster through SOPS like
 the rest. The operator `.env` is therefore the origin of record for key material,
 and the catalog is what makes that origin explicit rather than folkloric.
@@ -165,10 +165,10 @@ seeded from the catalog, not migrated. Reuse `RAUTHY_ENC_KEY` and
 
 The new cluster proves itself before anything moves. DNS records to repoint:
 `auth`, `deploy`, `grafana`, `minio`, and (once spec 009 lands) `app`, all
-under `stagecraft.ing`, plus the fleet's `deployd.xyz`. Note that `auth` is
+under `statecraft.ing`, plus the fleet's `deployd.xyz`. Note that `auth` is
 Cloudflare-proxied today while `app` is a direct A record to the worker, so
 the records are not uniform and each is checked individually. The apex
-`stagecraft.ing` stays GitHub Pages and is not touched.
+`statecraft.ing` stays GitHub Pages and is not touched.
 
 Rollback is repointing DNS at the old cluster, which stays running and
 untouched until the new one is proven.
@@ -176,13 +176,13 @@ untouched until the new one is proven.
 ### Teardown
 
 Only after the new cluster serves every host: delete the old cluster. The
-OAP `stagecraft` database dies with it, intentionally and without export
+OAP `statecraft` database dies with it, intentionally and without export
 (decided 2026-07-16). Nothing else on it is load-bearing.
 
 ## 4. Acceptance
 
-- A cluster whose nodes are named `stagecraft-hetzner-*` is Ready, and its
-  kubeconfig is the one at `~/.config/stagecraft-ing/infra/hetzner/`.
+- A cluster whose nodes are named `statecraft-hetzner-*` is Ready, and its
+  kubeconfig is the one at `~/.config/statecrafting/infra/hetzner/`.
 - Flux reconciles it from this repository; no object on the cluster
   references `open-agentic-platform`.
 - `infra/secrets/catalog.toml` generates `.env.example`, validates a real

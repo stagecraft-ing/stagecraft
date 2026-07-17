@@ -13,13 +13,13 @@ import { secret } from "encore.dev/config";
  *
  * Resolved per call rather than captured at module load: ES imports evaluate
  * before test hooks run, so a module-load constant would freeze to the default
- * before a test's beforeAll can set STAGECRAFT_GOVERNANCE_STATE_DIR, silently
+ * before a test's beforeAll can set statecraft_GOVERNANCE_STATE_DIR, silently
  * leaking the chain into the repo's ./.data/governance and making the suite
  * order- and run-count-dependent. A getter honors the override whenever it is
  * set.
  */
 export function governanceStateDir(): string {
-  return process.env.STAGECRAFT_GOVERNANCE_STATE_DIR ?? "./.data/governance";
+  return process.env.STATECRAFT_GOVERNANCE_STATE_DIR ?? "./.data/governance";
 }
 
 /**
@@ -35,7 +35,7 @@ export function governanceStateDir(): string {
  * and containers can point at a different config dir.
  */
 const gateConfigDir =
-  process.env.STAGECRAFT_GOVERNANCE_CONFIG_DIR ??
+  process.env.STATECRAFT_GOVERNANCE_CONFIG_DIR ??
   join(process.cwd(), "backend/governance/config");
 
 export const GATE_CONFIG_JSON: string = readFileSync(

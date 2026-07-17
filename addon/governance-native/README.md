@@ -1,8 +1,8 @@
-# @stagecraft/governance-native
+# @statecraft/governance-native
 
-Stagecraft's governance spine as a napi-rs addon (spec 008). It wraps four
+statecraft's governance spine as a napi-rs addon (spec 008). It wraps four
 crates.io crates (extracted from OAP's policy-kernel, published under the
-stagecraft-ing org) and exposes them to the Encore.ts `governance/` service as
+statecraft-ing org) and exposes them to the Encore.ts `governance/` service as
 plain-JSON-in / plain-JSON-out functions:
 
 | crate | primitive |

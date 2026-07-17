@@ -23,7 +23,7 @@ use serde_json::Value;
 
 /// Fixed genesis marker; the anchor root is its SHA-256 so a fresh `stateDir`
 /// starts from a stable, self-describing root rather than an ephemeral key.
-const GENESIS_SEED: &str = "stagecraft.governance.ledger/v1";
+const GENESIS_SEED: &str = "statecraft.governance.ledger/v1";
 const CHAIN_ID: &str = "governance";
 
 /// Result of a successful [`append`].
@@ -215,7 +215,7 @@ pub fn anchor(dir: &Path, key_seed_b64: &str) -> Result<String, String> {
 
     anchor.genesis_attestation = GenesisAttestation {
         kind: GenesisAttestationKind::Operator,
-        note: Some("stagecraft governance anchor".to_string()),
+        note: Some("statecraft governance anchor".to_string()),
     };
     sign_anchor(&mut anchor, &key);
     write_anchor(dir, &anchor)?;

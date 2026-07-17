@@ -15,7 +15,7 @@ Claude Code, Codex CLI, Cursor, Copilot, and any future agent).
    `## ` heading exclusive. That section is the step list.
 2. Execute the protocol described there, using parallel tool calls wherever it
    says "dispatch simultaneously".
-3. Emit a structured `## initialized: stagecraft` summary: lifecycle counts
+3. Emit a structured `## initialized: statecraft` summary: lifecycle counts
    (from `spec-spine registry status-report`), the spec inventory, and the
    next pending spec in the backlog build order (`AGENTS.md` § Working the
    backlog).

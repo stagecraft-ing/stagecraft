@@ -62,7 +62,7 @@ export interface PushInput {
   message: string;
 }
 
-/** Init, commit the whole tree as "Stagecraft Factory", and push to main. Returns the pushed SHA. */
+/** Init, commit the whole tree as "statecraft Factory", and push to main. Returns the pushed SHA. */
 export async function pushInitialCommit(input: PushInput): Promise<string> {
   const { workdir, org, repo, token, message } = input;
   await git(["-C", workdir, "init", "-b", "main", "--quiet"]);

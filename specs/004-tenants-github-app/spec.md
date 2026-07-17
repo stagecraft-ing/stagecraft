@@ -12,7 +12,7 @@ establishes:
 summary: >
   The tenancy spine of milestone M2: a user authenticates against the
   control plane (embedded rauthy, chassis auth), creates a tenant, and
-  installs the Stagecraft GitHub App into their own GitHub org; from
+  installs the statecraft GitHub App into their own GitHub org; from
   then on everything the platform does for them keys off the
   installation_id and happens inside their org. Nobody joins our org;
   code sovereignty is the product's first-class property. This spec
@@ -27,10 +27,10 @@ summary: >
 
 Use the existing GitHub App; do not create a new one:
 
-- **"StageCraft.ing GitHub App"**: App ID `3319911`, slug
-  `stagecraft-ing-github-app`, Client ID `Iv23liGNXeou5MxTTKxR`,
-  public link `https://github.com/apps/stagecraft-ing-github-app`.
-  Already installed org-wide on stagecraft-ing (installation id
+- **"statecraft.ing GitHub App"**: App ID `3319911`, slug
+  `statecraft-ing-github-app`, Client ID `Iv23liGNXeou5MxTTKxR`,
+  public link `https://github.com/apps/statecraft-ing-github-app`.
+  Already installed org-wide on statecraft-ing (installation id
   `125344051`, all repositories), which doubles as the test
   installation for e2e.
 - Permissions are a superset of what spec 004 itself needs (read: issues,
@@ -44,9 +44,9 @@ Use the existing GitHub App; do not create a new one:
   `GITHUB_APP_PRIVATE_KEY_B64` (base64-encoded PEM: decode before
   signing App JWTs), `GITHUB_WEBHOOK_SECRET`. Wire them into Encore
   secrets for this app; never commit or echo values. Use
-  `GITHUB_APP_SLUG=stagecraft-ing-github-app`.
+  `GITHUB_APP_SLUG=statecraft-ing-github-app`.
 - The App's webhook is active and points at the legacy plane
-  (`https://stagecraft.ing/api/github/webhook`). For local dev,
+  (`https://statecraft.ing/api/github/webhook`). For local dev,
   leave it; implement and unit-test HMAC verification regardless.
   Repointing the webhook to the new control plane happens when it has
   a public URL (fleet-deployed), not before.
@@ -126,7 +126,7 @@ does not currently hold and §1 originally said to skip:
 
 "Request nothing new" (§1) is superseded for exactly these two. Granting them is
 an operator action in the App's GitHub settings and a **breaking permission
-change**: every existing installation (including the org-wide `stagecraft-ing`
+change**: every existing installation (including the org-wide `statecraft-ing`
 install, id `125344051`) enters a "review updated permissions" state, and the
 App cannot act for that installation until its owner approves. Until the grant
 lands, spec 005's provisioning step 403s and is swallowed best-effort (the stamp

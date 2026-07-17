@@ -35,7 +35,7 @@ spec-spine is an installed CLI tool that governs this repo's spec corpus. In thi
 | Standard | `standards/spec/{constitution.md,contract.md,templates/}` | Principles, contract, templates |
 | Derived | `.derived/` | Compiler output (registry, index), committed shards |
 
-Key files: `CLAUDE.md` (conventions), `AGENTS.md` (session + backlog protocol), `.claude/rules/` (behavioral rules), `specs/001-stagecraft-thesis/spec.md` §3 (the service map: tenants, factory, fleet, webapp, governance). While the repo is pre-code, "how does X work?" questions resolve against the spec corpus, not source.
+Key files: `CLAUDE.md` (conventions), `AGENTS.md` (session + backlog protocol), `.claude/rules/` (behavioral rules), `specs/001-statecraft-thesis/spec.md` §3 (the service map: tenants, factory, fleet, webapp, governance). While the repo is pre-code, "how does X work?" questions resolve against the spec corpus, not source.
 
 ## Process
 

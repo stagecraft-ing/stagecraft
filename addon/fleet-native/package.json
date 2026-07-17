@@ -1,9 +1,9 @@
 {
-  "name": "@stagecraft/fleet-native",
+  "name": "@statecraft/fleet-native",
   "version": "0.1.0",
   "license": "AGPL-3.0",
   "spec-spine": { "spec": "006-fleet" },
-  "description": "Stagecraft's fleet placement core (native kube-rs construction of the EnRaHiTu placement shape plus deploy/status/update/backup/remove) as a napi-rs native addon for the Encore.ts fleet service (spec 006).",
+  "description": "statecraft's fleet placement core (native kube-rs construction of the EnRaHiTu placement shape plus deploy/status/update/backup/remove) as a napi-rs native addon for the Encore.ts fleet service (spec 006).",
   "type": "commonjs",
   "main": "index.js",
   "types": "index.d.ts",

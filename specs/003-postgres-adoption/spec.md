@@ -48,7 +48,7 @@ so this spec is unblocked and consumes it as-is.
 - Driver selection is config only. Spec 002's import kept the chassis
   substrate env prefix (the stamp deliberately does not rename env
   prefixes), so the variable is `ENRAHITU_LEDGER_URL`, not a
-  stagecraft-prefixed name: `postgres://...` selects the Postgres driver,
+  statecraft-prefixed name: `postgres://...` selects the Postgres driver,
   `file:...` keeps libSQL for quick local hacking. Both are documented in
   `.env.example`. The parameterized test suite selects Postgres separately
   via `TEST_POSTGRES_URL` (set by CI against a Postgres service, unset

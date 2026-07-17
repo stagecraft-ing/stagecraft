@@ -24,7 +24,7 @@ export function Login() {
   return (
     <div className="auth-shell">
       <div className="card auth-card">
-        <h1 className="brand">stagecraft</h1>
+        <h1 className="brand">statecraft</h1>
         <p className="muted">The governed agentic delivery control plane.</p>
         <h2>Sign in</h2>
         <div className="auth-drivers">

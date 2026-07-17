@@ -43,7 +43,7 @@ endpoints, CoreLedger entities, template cache, stamp pipeline.
 
 ## 3. Behavior
 
-- **Template source**: `git@github.com:stagecraft-ing/enrahitu.git`,
+- **Template source**: `git@github.com:statecrafting/enrahitu.git`,
   pinned by config to a commit SHA (env `FACTORY_TEMPLATE_REF`,
   default a recorded known-good SHA; never floating main). A warmup
   step keeps a local bare-clone cache under the app's data dir and
@@ -79,7 +79,7 @@ endpoints, CoreLedger entities, template cache, stamp pipeline.
      enrahitu spec 012 §3 (posture from the stamp request, default
      REQUEST-EXPLICIT: the API requires the caller to pass posture;
      never default it silently), keysorted-canonical sha256 hash,
-     place at `.stagecraft/born-with.json`, run the contract's
+     place at `.statecraft/born-with.json`, run the contract's
      provenance verify command, store certHash on the job. Then anchor
      the cert in the governance attestation ledger (spec 008): append a
      `stamp` attestation carrying the certHash and the stamp mode,
@@ -92,12 +92,12 @@ endpoints, CoreLedger entities, template cache, stamp pipeline.
        default branch main) and push the stamped tree as the initial
        commit over https
        (`https://x-access-token:<token>@github.com/<org>/<repo>.git`);
-       commit author "Stagecraft Factory".
+       commit author "statecraft Factory".
      - **adopt**: verify the existing repo, clone its default branch,
        overlay the stamped chassis onto a `factory/adopt-<sha>` branch
        (chassis files land; files unique to the repo are preserved; the
        exported tree has no `.git`, so history is untouched), commit as
-       "Stagecraft Factory", push the branch, and open a pull request
+       "statecraft Factory", push the branch, and open a pull request
        into the default branch. The PR url is stored on the job.
   6. Verify born-green: poll the repo's workflow runs for the verify
      workflow on the pushed SHA (the initial commit, or the PR head)

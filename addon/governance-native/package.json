@@ -1,9 +1,9 @@
 {
-  "name": "@stagecraft/governance-native",
+  "name": "@statecraft/governance-native",
   "version": "0.1.0",
   "license": "AGPL-3.0",
   "spec-spine": { "spec": "008-governance-attestation" },
-  "description": "Stagecraft's governance spine (canonical JSON, attest-ledger record chain, action gate, trust window) as a napi-rs native addon for the Encore.ts governance service (spec 008).",
+  "description": "statecraft's governance spine (canonical JSON, attest-ledger record chain, action gate, trust window) as a napi-rs native addon for the Encore.ts governance service (spec 008).",
   "type": "commonjs",
   "main": "index.js",
   "types": "index.d.ts",

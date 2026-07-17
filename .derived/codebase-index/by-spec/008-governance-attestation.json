@@ -1,7 +1,7 @@
 {
   "mapping": {
     "dependsOn": [
-      "001-stagecraft-thesis"
+      "001-statecraft-thesis"
     ],
     "implementingPaths": [
       {
@@ -49,5 +49,5 @@
     "specStatus": "approved"
   },
   "schemaVersion": "1.1.0",
-  "shardHash": "dcdb0d47439fa5857179b9567e83b9bed8c962f8038674ba36e28aee9152b302"
+  "shardHash": "e596aa42b2cb5c23025fed053ea8e491dc31c4af51a160c84bfa154d40e7d19e"
 }

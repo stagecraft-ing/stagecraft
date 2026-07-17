@@ -4,14 +4,14 @@
     "warnings": [
       {
         "code": "W-001",
-        "message": "spec '010-stagecraft-cluster' directory unit 'infra/' is not a directory",
+        "message": "spec '010-statecraft-cluster' directory unit 'infra/' is not a directory",
         "path": "infra/"
       }
     ]
   },
   "mapping": {
     "dependsOn": [
-      "001-stagecraft-thesis"
+      "001-statecraft-thesis"
     ],
     "implementingPaths": [],
     "resolvedUnits": [
@@ -25,9 +25,9 @@
         }
       }
     ],
-    "specId": "010-stagecraft-cluster",
+    "specId": "010-statecraft-cluster",
     "specStatus": "approved"
   },
   "schemaVersion": "1.1.0",
-  "shardHash": "b73d9a8d75f3138d18fc3b7740d1851354ad21c86b56b357c9be335eee766d01"
+  "shardHash": "92aa2d3d9183ff89271872023b768248ce9ef8c9f210e453b3e0bdb27a0a77f4"
 }

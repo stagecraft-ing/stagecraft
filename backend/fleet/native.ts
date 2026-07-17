@@ -7,7 +7,7 @@
  * (`FLEET_KUBECONFIG_PATH`, else in-cluster / `~/.kube/config`); this layer never
  * opens the kubeconfig file.
  */
-import fleetNative from "@stagecraft/fleet-native";
+import fleetNative from "@statecraft/fleet-native";
 
 /** The desired placement for one app. `namespace` is `t-<tenantId>`. */
 export interface DeploySpec {

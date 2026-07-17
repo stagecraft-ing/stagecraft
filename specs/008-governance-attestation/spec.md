@@ -5,7 +5,7 @@ status: approved
 created: "2026-07-14"
 implementation: complete
 depends_on:
-  - "001-stagecraft-thesis"
+  - "001-statecraft-thesis"
 establishes:
   - { kind: directory, path: "backend/governance/" }
   - { kind: directory, path: "addon/governance-native/" }
@@ -28,11 +28,11 @@ summary: >
 ## 1. Crate dependencies (read first)
 
 Four external crates, extracted from the OAP policy-kernel
-(stagecraft-ing lineage). DECIDED 2026-07-14: all are published on
-crates.io under the stagecraft-ing org (verified: canonical-keysort-json
+(statecraft-ing lineage). DECIDED 2026-07-14: all are published on
+crates.io under the statecraft-ing org (verified: canonical-keysort-json
 0.1.0, attest-ledger-types/core/cli 0.1.0, action-gate-types/core
 0.1.0, trust-window 0.1.0; repository fields point at
-github.com/stagecraft-ing/*). Consume from crates.io with exact version
+github.com/statecrafting/*). Consume from crates.io with exact version
 pins (`=0.1.x` while pre-1.0); do NOT use git dependencies. Local
 working copies exist at ~/DevWork/<name> for reference reading if the
 session has access.
@@ -141,7 +141,7 @@ and awaits the shell to typecheck and run.
   `<stateDir>/anchor.json` (the genesis anchor, unsigned until
   `ledgerAnchor` signs it with an operator Ed25519 seed). `seq` is the
   0-based line index; the chain head after an append equals that record's
-  hash. Genesis root is `sha256("stagecraft.governance.ledger/v1")`.
+  hash. Genesis root is `sha256("statecraft.governance.ledger/v1")`.
 - **The addon owns the gate config schema and the four checks.**
   `action-gate` ships the ordered-registry machinery but no config model
   and none of the v1 checks, so `GateConfigV1` (an ordered id list) and
@@ -172,7 +172,7 @@ trust store, the native facade, config); `governance/config/gate.v1.json`;
 
 - The service cannot typecheck, run, or be vitest-tested until the chassis
   provides `encore.dev/*`, CoreLedger (`../core/ledger`, spec 003), the root
-  npm package, and the built `@stagecraft/governance-native` `.node`. On 002:
+  npm package, and the built `@statecraft/governance-native` `.node`. On 002:
   add the addon as a dependency, `npm run build` it, and the authored
   `governance/records.test.ts` (record round-trip + index row + independent
   payloadHash + gate deny) runs green.
@@ -185,7 +185,7 @@ in the same landing. The service moved from repo-root `governance/` to
 `backend/governance/` (the two-directory layout, enrahitu spec 019): its
 `../core/ledger` import now resolves to `backend/core/ledger` and Encore
 discovers it as a service. The root `package.json` carries
-`@stagecraft/governance-native` as a `file:` dep built by `build:addon`;
+`@statecraft/governance-native` as a `file:` dep built by `build:addon`;
 `native.ts` imports the built `.node`.
 
 Wiring adjustments made on the rebase (faithful to §2/§3, no behavior

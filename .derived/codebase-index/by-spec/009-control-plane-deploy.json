@@ -3,7 +3,7 @@
     "dependsOn": [
       "002-app-shell",
       "008-governance-attestation",
-      "010-stagecraft-cluster"
+      "010-statecraft-cluster"
     ],
     "implementingPaths": [
       {
@@ -47,5 +47,5 @@
     "specStatus": "approved"
   },
   "schemaVersion": "1.1.0",
-  "shardHash": "4aa9abdfe7793f0199b02d458408b6002ad46e5166ec908d18a58af863604c6f"
+  "shardHash": "44600dfd054c6555d6649b2565e2dc421a551e00568bcf9373667a4bfe90a8b5"
 }

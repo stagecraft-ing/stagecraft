@@ -1,11 +1,11 @@
 {
   "package": {
     "kind": "npm-package",
-    "name": "stagecraft",
+    "name": "statecraft",
     "path": "",
     "specRef": "002-app-shell",
     "version": "0.1.0"
   },
   "schemaVersion": "1.1.0",
-  "shardHash": "ac494b5d04cb096dfc85c30787590b1b47f0bf26a325b94365d57db84e7069eb"
+  "shardHash": "93f211d31a2ee739dc8f88a4aded1bbc2c742aa4ca3071688e421d10c493d898"
 }

@@ -136,7 +136,7 @@ lifted.
     + workload rights only) is a required follow-up before any
     non-operator touches the fleet.
   - **Domain / TLS.** `FLEET_BASE_DOMAIN` = `deployd.xyz` (a Cloudflare
-    zone in the same account as `stagecraft.ing`). TLS issuer =
+    zone in the same account as `statecraft.ing`). TLS issuer =
     `letsencrypt-prod-dns01-cloudflare`; ingress class `nginx`. Before
     live E2E: create `*.deployd.xyz` in Cloudflare pointing at the
     ingress entrypoint (a hostNetwork ingress-nginx DaemonSet on a
@@ -149,7 +149,7 @@ lifted.
     `https://nbg1.your-objectstorage.com`. These plus `FLEET_BASE_DOMAIN`
     are not yet in the infra `.env`; adding them there and to the OAP
     `platform/infra/hetzner/.env.example` is a follow-up so
-    `oap-bootstrap` keeps working under the stagecraft paradigm.
+    `oap-bootstrap` keeps working under the statecraft paradigm.
 
 ## 4. Acceptance
 
@@ -246,7 +246,7 @@ check):
   direction the 2026-07-15 E2E verified. Golden `cargo test` asserts the
   securityContext (12 tests).
 
-Nothing in stagecraft's own territory now blocks acceptance. What remains is
+Nothing in statecraft's own territory now blocks acceptance. What remains is
 external and outside spec 006 (§5):
 
 1. **A pullable amd64 enrahitu image (finding #4 stands).** enrahitu v0.2.0
@@ -254,7 +254,7 @@ external and outside spec 006 (§5):
    smokes a native amd64 image but never pushes it (it runs on
    `workflow_dispatch`/weekly, with no registry login or `docker push`), so no
    deployable image exists. Publishing one is enrahitu's image pipeline (a later
-   spec), not stagecraft's.
+   spec), not statecraft's.
 2. **An ingress entrypoint.** ingress-nginx on the cluster is ClusterIP, not
    hostNetwork, so `*.deployd.xyz` has no external target; a hostNetwork ingress
    DaemonSet plus the Cloudflare `*.deployd.xyz` record are needed before
@@ -276,10 +276,10 @@ real hetzner-k3s cluster, driven through the fleet-native addon:
   hostPort 80/443, so no cluster rebuild was needed; a `*.deployd.xyz` A record
   to worker1 was added, and a `deployd.xyz` DNS-01 solver was appended to the
   `letsencrypt-prod-dns01-cloudflare` ClusterIssuer (additive; the platform's
-  `tenants.stagecraft.ing` solver untouched).
+  `tenants.statecraft.ing` solver untouched).
 - **Secrets.** `FLEET_S3_*` + `RESTIC_PASSWORD` were already in the infra `.env`;
   `FLEET_BASE_DOMAIN=deployd.xyz` was added.
-- **Image.** Pulled the private `ghcr.io/stagecraft-ing/enrahitu` (enrahitu #19).
+- **Image.** Pulled the private `ghcr.io/statecrafting/enrahitu` (enrahitu #19).
 
 E2E result at `e2e.deployd.xyz`: **deploy** placed the full shape, the pod ran as
 non-root (UID/GID 1000, finding #3) after pulling the private image (finding #2),
