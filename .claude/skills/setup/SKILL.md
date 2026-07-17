@@ -74,7 +74,7 @@ npm run typecheck && npm test    # the chassis gates
 Report exactly:
 
 ```
-## setup: stagecraft
+## setup: statecraft
 
 **Install:** {ok / failed at <step>}
 **Governed loop:**

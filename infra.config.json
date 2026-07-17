@@ -1,7 +1,7 @@
 {
   "$schema": "https://encore.dev/schemas/infra.schema.json",
   "metadata": {
-    "app_id": "stagecraft",
+    "app_id": "statecraft",
     "env_name": "selfhost",
     "env_type": "production",
     "cloud": "local",

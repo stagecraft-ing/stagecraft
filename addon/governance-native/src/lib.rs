@@ -1,4 +1,4 @@
-//! governance-native: stagecraft's governance spine as a napi-rs addon.
+//! governance-native: statecraft's governance spine as a napi-rs addon.
 //!
 //! Four primitives, extracted from OAP's policy-kernel and consumed here from
 //! crates.io (spec 008 §1), exposed to the Encore.ts `governance/` service as

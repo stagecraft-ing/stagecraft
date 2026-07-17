@@ -28,7 +28,7 @@ summary: >
 
 `webapp/` is re-established by this spec (the Vue placeholder from the
 chassis import, spec 002, is deleted). New package name
-`@stagecraft/webapp`, spec-spine manifest key -> this spec. Keep the
+`@statecraft/webapp`, spec-spine manifest key -> this spec. Keep the
 build contract identical: `npm --prefix webapp run build` emits into
 `backend/web/dist` (the path the chassis web static service serves);
 that static service is untouched.
@@ -129,13 +129,13 @@ full:
 - **§3.1 in-browser click-through** (real data): unauthenticated load
   redirects to `/login`; mock sign-in lands on the tenants dashboard;
   `New tenant` -> create -> tenant detail. The detail page then bound the
-  real org-wide `stagecraft-ing` installation (`125344051`, the spec 004
+  real org-wide `statecraft-ing` installation (`125344051`, the spec 004
   e2e installation) through the real `/github/setup` App-JWT path and
   rendered the active installation plus the live repository list read
   through the installation token.
 - **§3.2 launching a stamp shows live job progression** (real factory):
   from the stamp launcher (`/tenants/:id/stamps/new`) a create-mode stamp
-  (`july-15-stampcheck`, org `stagecraft-ing`, posture `none`) launched
+  (`july-15-stampcheck`, org `statecraft-ing`, posture `none`) launched
   and the progress view (`/stamps/:jobId`) polled every 2s, advancing the
   stepper live queued -> stamping -> pushing -> verifying -> (terminal).
   The factory really cloned the pinned template, stamped, created the
@@ -154,7 +154,7 @@ already green (above) and stays green.
 
 ### Update 2026-07-16 (chassis realignment: `webapp/` -> `frontend/`, back to `in-progress`)
 
-The SPA lives at `webapp/`, and it should not. Stagecraft is stamped from the
+The SPA lives at `webapp/`, and it should not. statecraft is stamped from the
 enrahitu chassis and is supposed to look like it: enrahitu's slimmed chassis is
 two directories, `backend/` + `frontend/` (with a `frontend-react/` variant),
 and this repo imported it as `backend/` + `webapp/`. The divergence bought

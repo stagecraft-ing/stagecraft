@@ -2,7 +2,7 @@
 //!
 //! `action-gate` ships the pure Gate machinery (ordered registry, first-match
 //! evaluation, order-sensitive stable config hash) but deliberately no config
-//! schema and no domain checks. This module supplies both for stagecraft:
+//! schema and no domain checks. This module supplies both for statecraft:
 //! `GateConfigV1` (a committed JSON list of check ids, spec 008 §2) and the
 //! four v1 checks. Checks read their inputs from `ActionContext.attributes`.
 

@@ -1,11 +1,11 @@
 {
-  "name": "@stagecraft/webapp",
+  "name": "@statecraft/webapp",
   "version": "0.1.0",
   "private": true,
   "license": "AGPL-3.0",
   "spec-spine": { "spec": "007-governance-webapp" },
   "type": "module",
-  "description": "Stagecraft governance UI (spec 007): a React 19 + React Router v7 SPA built into backend/web/dist and served same-origin by the chassis web static service. Surface: login, tenants, GitHub App install, stamp launcher + job progress, fleet table.",
+  "description": "statecraft governance UI (spec 007): a React 19 + React Router v7 SPA built into backend/web/dist and served same-origin by the chassis web static service. Surface: login, tenants, GitHub App install, stamp launcher + job progress, fleet table.",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

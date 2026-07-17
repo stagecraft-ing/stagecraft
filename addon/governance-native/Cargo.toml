@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 publish = false
 license = "AGPL-3.0"
-description = "Stagecraft's governance spine as a napi-rs addon: canonical JSON, the attest-ledger record chain, the action-gate, and the trust window, exposed to the Encore.ts governance service (spec 008)."
+description = "statecraft's governance spine as a napi-rs addon: canonical JSON, the attest-ledger record chain, the action-gate, and the trust window, exposed to the Encore.ts governance service (spec 008)."
 
 # Standalone crate: no root Cargo workspace exists in this repo. Declaring an
 # empty workspace here pins the workspace root to this directory so cargo never

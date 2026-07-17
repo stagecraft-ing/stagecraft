@@ -74,11 +74,11 @@ jobs:
         run: |
           set -euo pipefail
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
-          docker tag stagecraft:latest "$IMAGE:${{ github.sha }}"
-          docker tag stagecraft:latest "$IMAGE:latest"
+          docker tag statecraft:latest "$IMAGE:${{ github.sha }}"
+          docker tag statecraft:latest "$IMAGE:latest"
           docker push "$IMAGE:${{ github.sha }}"
           docker push "$IMAGE:latest"
           if [ "${{ github.event_name }}" = "release" ]; then
-            docker tag stagecraft:latest "$IMAGE:${{ github.event.release.tag_name }}"
+            docker tag statecraft:latest "$IMAGE:${{ github.event.release.tag_name }}"
             docker push "$IMAGE:${{ github.event.release.tag_name }}"
           fi

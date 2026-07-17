@@ -1,14 +1,14 @@
-# CLAUDE.md: stagecraft
+# CLAUDE.md: statecraft
 
 ## Project Overview
 
-Stagecraft is the governed agentic delivery control plane: tenants
+statecraft is the governed agentic delivery control plane: tenants
 (per-customer GitHub App installations), factory (stamps apps from the
 enrahitu template via its versioned `template.toml` contract), fleet
 (operates stamped single-container apps; deployd's orchestration core as
 an in-process napi addon), and the governance UI. It is itself the first
 production EnRaHiTu app. The thesis, consolidation record, service map,
-and milestone ladder live in `specs/001-stagecraft-thesis/spec.md`.
+and milestone ladder live in `specs/001-statecraft-thesis/spec.md`.
 
 The repo is currently pre-code: the spec spine is the substance, and
 services land under their own numbered specs as their build starts.
@@ -56,7 +56,7 @@ tooling arrives with the first service spec.
 ## Key Conventions
 
 - **License boundaries are load-bearing.** This repo is AGPL-3.0; the
-  enrahitu template and stagecraft-cli are Apache-2.0 in their own repos.
+  enrahitu template and statecraft-cli are Apache-2.0 in their own repos.
   Do not move code across the boundary without noting the license
   implication in the PR.
 - **The factory consumes `template.toml` and nothing else** (enrahitu

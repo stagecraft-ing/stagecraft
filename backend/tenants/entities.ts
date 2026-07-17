@@ -2,7 +2,7 @@
  * CoreLedger entities for the tenancy spine (spec 004 §3).
  *
  * A `Tenant` is a customer workspace owned by the user who created it. An
- * `Installation` records one Stagecraft GitHub App installation into that
+ * `Installation` records one statecraft GitHub App installation into that
  * customer's org; a tenant may hold several installations, and an installation
  * belongs to exactly one tenant. Everything the platform later does for a
  * customer keys off `installationId` (spec 004 summary). CoreLedger runs the

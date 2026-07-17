@@ -10,10 +10,10 @@
         "path": "README.md"
       }
     ],
-    "id": "001-stagecraft-thesis",
+    "id": "001-statecraft-thesis",
     "implementation": "pending",
     "sectionHeadings": [
-      "001: Stagecraft thesis",
+      "001: statecraft thesis",
       "1. Purpose",
       "2. What consolidates here",
       "3. Architecture",
@@ -23,10 +23,10 @@
       "6. Milestone ladder",
       "7. Out of scope"
     ],
-    "specPath": "specs/001-stagecraft-thesis/spec.md",
+    "specPath": "specs/001-statecraft-thesis/spec.md",
     "status": "approved",
-    "summary": "The product thesis and the consolidation record. Stagecraft is the control plane for governed AI-native software delivery: intent becomes a governed spec, the factory stamps an application from the EnRaHiTu template, the fleet operates the resulting hermetic containers, and the customer's code lives in the customer's GitHub org the entire time. Stagecraft is itself the first production EnRaHiTu app: one container, embedded rauthy as the platform IdP, hiqlite in-process, CoreLedger for durable state (on Postgres via enrahitu spec 011). This spec records what consolidates here from the OAP era and the milestone ladder that orders the build.\n",
-    "title": "Stagecraft: the governed agentic delivery control plane"
+    "summary": "The product thesis and the consolidation record. statecraft is the control plane for governed AI-native software delivery: intent becomes a governed spec, the factory stamps an application from the EnRaHiTu template, the fleet operates the resulting hermetic containers, and the customer's code lives in the customer's GitHub org the entire time. statecraft is itself the first production EnRaHiTu app: one container, embedded rauthy as the platform IdP, hiqlite in-process, CoreLedger for durable state (on Postgres via enrahitu spec 011). This spec records what consolidates here from the OAP era and the milestone ladder that orders the build.\n",
+    "title": "statecraft: the governed agentic delivery control plane"
   },
   "shardHash": "81fb66f65b28a1a0bc705ff42406d90a328b701478bd64a03a5a61297c68376a",
   "specVersion": "1.1.0"

@@ -3,7 +3,7 @@
 
 The tenancy spine of milestone M2. A user authenticates against the control
 plane (embedded rauthy, chassis auth), creates a tenant, and installs the
-Stagecraft GitHub App into their own org. From then on everything the platform
+statecraft GitHub App into their own org. From then on everything the platform
 does for them keys off `installationId` and happens inside their org: nobody
 joins our org, code sovereignty is a first-class property.
 
@@ -48,8 +48,8 @@ every `:id` read enforces ownership (a foreign tenant reads as 404).
 
 Wired into Encore secrets via `infra.config.json` (spec 002-owned root config,
 amended by spec 004): `GITHUB_APP_ID`, `GITHUB_APP_PRIVATE_KEY_B64` (base64 PEM),
-`GITHUB_WEBHOOK_SECRET`. The App is "StageCraft.ing GitHub App" (App ID 3319911,
-slug `stagecraft-ing-github-app`), already installed org-wide on stagecraft-ing
+`GITHUB_WEBHOOK_SECRET`. The App is "statecraft.ing GitHub App" (App ID 3319911,
+slug `statecraft-ing-github-app`), already installed org-wide on statecraft-ing
 (installation 125344051), which doubles as the e2e test installation.
 
 For local dev, `secret()` returns "" and the service reads `process.env`, so:
@@ -65,7 +65,7 @@ npm run dev
 2. `POST /api/v1/tenants { "name": "..." }` -> note the tenant id.
 3. `GET /api/v1/tenants/:id/github/install-url` -> open the returned URL.
 4. On GitHub, install the App into an org (or "Configure" the existing
-   stagecraft-ing installation) -> GitHub redirects to `GET /github/setup`,
+   statecraft-ing installation) -> GitHub redirects to `GET /github/setup`,
    which persists the `Installation` and bounces to `/?github=installed&tenant=:id`.
 5. `GET /api/v1/tenants/:id` shows the installation; `GET /api/v1/tenants/:id/repos`
    returns the org's repositories.

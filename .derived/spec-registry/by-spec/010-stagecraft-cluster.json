@@ -2,7 +2,7 @@
   "record": {
     "created": "2026-07-16",
     "dependsOn": [
-      "001-stagecraft-thesis"
+      "001-statecraft-thesis"
     ],
     "establishes": [
       {
@@ -10,10 +10,10 @@
         "path": "infra/"
       }
     ],
-    "id": "010-stagecraft-cluster",
+    "id": "010-statecraft-cluster",
     "implementation": "pending",
     "sectionHeadings": [
-      "010: The stagecraft cluster",
+      "010: The statecraft cluster",
       "1. Purpose",
       "2. Territory",
       "3. Behavior",
@@ -27,10 +27,10 @@
       "4. Acceptance",
       "5. Out of scope"
     ],
-    "specPath": "specs/010-stagecraft-cluster/spec.md",
+    "specPath": "specs/010-statecraft-cluster/spec.md",
     "status": "approved",
-    "summary": "Stagecraft does not own the cluster it runs on: the nodes are named for OAP, and Flux reconciles this cluster from the open-agentic-platform repository. Build a stagecraft-owned hetzner-k3s cluster alongside the existing one, reconciled by Flux from a stagecraft-owned GitOps tree, with one documented secret source that generates both the local-dev `.env` and the SOPS-encrypted cluster secrets Flux decrypts in-cluster. Stand up the platform services (cert-manager, ingress-nginx, rauthy, Postgres, NSQ, minio, prometheus/grafana), cut DNS when proven, then delete the old cluster. Blue-green at the cluster level: rollback is a DNS change.\n",
-    "title": "The stagecraft cluster: Flux GitOps, SOPS secrets, platform services"
+    "summary": "statecraft does not own the cluster it runs on: the nodes are named for OAP, and Flux reconciles this cluster from the open-agentic-platform repository. Build a statecraft-owned hetzner-k3s cluster alongside the existing one, reconciled by Flux from a statecraft-owned GitOps tree, with one documented secret source that generates both the local-dev `.env` and the SOPS-encrypted cluster secrets Flux decrypts in-cluster. Stand up the platform services (cert-manager, ingress-nginx, rauthy, Postgres, NSQ, minio, prometheus/grafana), cut DNS when proven, then delete the old cluster. Blue-green at the cluster level: rollback is a DNS change.\n",
+    "title": "The statecraft cluster: Flux GitOps, SOPS secrets, platform services"
   },
   "shardHash": "8a4eabc88df4306f7e81b08b6038a16eb85edc5cf70654ae2a0fc31b92fc031b",
   "specVersion": "1.1.0"

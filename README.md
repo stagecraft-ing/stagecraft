@@ -1,4 +1,4 @@
-# Stagecraft
+# statecraft
  
 The governed agentic delivery control plane: intent becomes a governed
 spec, the factory stamps an application from the
@@ -6,7 +6,7 @@ spec, the factory stamps an application from the
 operates the resulting hermetic containers, and the customer's code lives
 in the customer's GitHub org the entire time.
 
-Stagecraft is itself the first production EnRaHiTu app: one container,
+statecraft is itself the first production EnRaHiTu app: one container,
 embedded [rauthy](https://github.com/sebadob/rauthy) as the platform IdP,
 [hiqlite](https://github.com/sebadob/hiqlite) in-process, CoreLedger for
 durable state (on Postgres; stamped customer apps run the same decorator
@@ -19,7 +19,7 @@ Born governed. The spec spine is the authoritative design record; the app
 shell (spec 002) and the governance spine (spec 008) have now landed:
 
 - `specs/000-bootstrap/` defines the spec system itself.
-- `specs/001-stagecraft-thesis/` is the product thesis, the consolidation
+- `specs/001-statecraft-thesis/` is the product thesis, the consolidation
   record (what moves here from the Open Agentic Platform research era),
   the service map, and the milestone ladder (M1 template contract through
   M5 paying agencies).
@@ -32,7 +32,7 @@ React Router v7).
 
 ## Chassis
 
-Stagecraft is stamped from the
+statecraft is stamped from the
 [enrahitu template](https://github.com/statecrafting/enrahitu) as its
 first production consumer. The app shell (spec 002) imports the slimmed
 two-directory chassis (`backend/` + `frontend/`) at enrahitu commit
@@ -40,7 +40,7 @@ two-directory chassis (`backend/` + `frontend/`) at enrahitu commit
 as pinned `@enrahitu/*` npm packages (`0.1.0`), not vendored source. The
 imported chassis is Apache-2.0 entering this AGPL-3.0 repo, the sanctioned
 direction. There is no born-with provenance cert here yet: that is minted
-by the factory (spec 005) when it stamps apps, and stagecraft will carry
+by the factory (spec 005) when it stamps apps, and statecraft will carry
 its own once the factory can emit one.
 
 ## The product family
@@ -48,9 +48,9 @@ its own once the factory can emit one.
 | Repo | License | Role |
 |---|---|---|
 | [enrahitu](https://github.com/statecrafting/enrahitu) | Apache-2.0 | The template chassis: Encore.ts + rauthy + hiqlite + Turso, single container |
-| stagecraft (this repo) | AGPL-3.0 | The control plane: tenants, factory, fleet, governance UI |
-| [stagecraft-cli](https://github.com/statecrafting/statecraft-cli) | Apache-2.0 | The CLI + MCP server: governance verbs for humans and agents |
-| [stagecraft.ing](https://github.com/statecrafting/statecraft.ing) | n/a | Website and docs |
+| statecraft (this repo) | AGPL-3.0 | The control plane: tenants, factory, fleet, governance UI |
+| [statecraft-cli](https://github.com/statecrafting/statecraft-cli) | Apache-2.0 | The CLI + MCP server: governance verbs for humans and agents |
+| [statecraft.ing](https://github.com/statecrafting/statecraft.ing) | n/a | Website and docs |
 
 ## Governance
 

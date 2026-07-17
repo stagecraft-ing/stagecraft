@@ -6,7 +6,7 @@
  * addon exports (see addon/governance-native/src/napi_api.rs); the generated
  * `index.d.ts` supersedes them once the addon is built under the shell.
  */
-import governanceNative from "@stagecraft/governance-native";
+import governanceNative from "@statecraft/governance-native";
 
 /** `{ canonical, sha256 }` for a JSON document (sha256 is bare lowercase hex). */
 export interface CanonicalResult {

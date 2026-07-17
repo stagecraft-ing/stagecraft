@@ -1,7 +1,7 @@
 {
   "package": {
     "kind": "npm-package",
-    "name": "@stagecraft/webapp",
+    "name": "@statecraft/webapp",
     "path": "webapp",
     "specRef": "007-governance-webapp",
     "version": "0.1.0"

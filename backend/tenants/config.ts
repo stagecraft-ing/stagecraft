@@ -1,7 +1,7 @@
 /**
  * Tenants service configuration: the GitHub App identity and its secrets.
  *
- * The App itself is fixed (spec 004 §1): "StageCraft.ing GitHub App", App ID
+ * The App itself is fixed (spec 004 §1): "statecraft.ing GitHub App", App ID
  * 3319911, slug `statecraft-ing-github-app`. Its three secrets live in the
  * central infra config and are wired into Encore secrets (infra.config.json).
  * In a deployed/self-host environment `secret()` returns the bound value; in

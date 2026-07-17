@@ -27,4 +27,4 @@ services:
       retries: 10
 
 volumes:
-  stagecraft-pgdata:
+  statecraft-pgdata:

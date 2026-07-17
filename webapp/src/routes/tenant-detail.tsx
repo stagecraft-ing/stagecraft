@@ -85,12 +85,12 @@ export function TenantDetail() {
         <div className="card empty">
           <p>No GitHub App installation yet.</p>
           <p className="muted">
-            Install the Stagecraft App into your GitHub org so the factory can stamp repos into it.
+            Install the statecraft App into your GitHub org so the factory can stamp repos into it.
             Nobody joins our org; your code stays in yours.
           </p>
           {/* Full-page navigation to GitHub; it redirects back to "/?github=installed". */}
           <a className="btn btn-primary" href={installUrl}>
-            Install the Stagecraft App
+            Install the statecraft App
           </a>
         </div>
       ) : (

@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 publish = false
 license = "AGPL-3.0"
-description = "Stagecraft's fleet placement core as a napi-rs addon: native kube-rs construction of the EnRaHiTu placement shape (Deployment + PVC + Service + Ingress + Namespace + NetworkPolicy) plus deploy/status/update/backup/remove, for the Encore.ts fleet service (spec 006)."
+description = "statecraft's fleet placement core as a napi-rs addon: native kube-rs construction of the EnRaHiTu placement shape (Deployment + PVC + Service + Ingress + Namespace + NetworkPolicy) plus deploy/status/update/backup/remove, for the Encore.ts fleet service (spec 006)."
 
 # Standalone crate: no root Cargo workspace exists in this repo. The empty
 # workspace table pins the workspace root here so cargo never walks upward

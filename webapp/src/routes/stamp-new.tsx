@@ -64,7 +64,7 @@ export function StampNew() {
         <div className="card empty">
           <p>No active GitHub installation.</p>
           <p className="muted">
-            The factory stamps into an org the Stagecraft App is installed in. Install it first.
+            The factory stamps into an org the statecraft App is installed in. Install it first.
           </p>
           <Link className="btn btn-primary" to={`/tenants/${tenant.id}`}>
             Back to tenant

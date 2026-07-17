@@ -35,7 +35,7 @@ spec-spine is an installed CLI tool that governs this repo's spec corpus. In thi
 | Standard | `standards/spec/` | Contract and constitution alignment |
 | Derived | `.derived/` | Must not be hand-edited; only `spec-spine compile` / `spec-spine index` output, committed as shards |
 
-Domain rules worth extra scrutiny (from `CLAUDE.md`): CoreLedger is the only durable-data API (no Encore `SQLDatabase` anywhere); the factory consumes `template.toml` and nothing else (never reach into template internals); license boundaries are load-bearing (AGPL-3.0 here, Apache-2.0 in enrahitu and stagecraft-cli).
+Domain rules worth extra scrutiny (from `CLAUDE.md`): CoreLedger is the only durable-data API (no Encore `SQLDatabase` anywhere); the factory consumes `template.toml` and nothing else (never reach into template internals); license boundaries are load-bearing (AGPL-3.0 here, Apache-2.0 in enrahitu and statecraft-cli).
 
 ## Process
 

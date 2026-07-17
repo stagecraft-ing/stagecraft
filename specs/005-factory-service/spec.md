@@ -92,12 +92,12 @@ endpoints, CoreLedger entities, template cache, stamp pipeline.
        default branch main) and push the stamped tree as the initial
        commit over https
        (`https://x-access-token:<token>@github.com/<org>/<repo>.git`);
-       commit author "Stagecraft Factory".
+       commit author "statecraft Factory".
      - **adopt**: verify the existing repo, clone its default branch,
        overlay the stamped chassis onto a `factory/adopt-<sha>` branch
        (chassis files land; files unique to the repo are preserved; the
        exported tree has no `.git`, so history is untouched), commit as
-       "Stagecraft Factory", push the branch, and open a pull request
+       "statecraft Factory", push the branch, and open a pull request
        into the default branch. The PR url is stored on the job.
   6. Verify born-green: poll the repo's workflow runs for the verify
      workflow on the pushed SHA (the initial commit, or the PR head)

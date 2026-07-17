@@ -1,7 +1,7 @@
 {
   "package": {
     "kind": "npm-package",
-    "name": "stagecraft",
+    "name": "statecraft",
     "path": "",
     "specRef": "002-app-shell",
     "version": "0.1.0"

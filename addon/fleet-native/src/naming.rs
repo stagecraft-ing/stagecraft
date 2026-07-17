@@ -18,7 +18,7 @@ const RESERVED: &[&str] = &[
     "default",
     "deployd-system",
     "rauthy-system",
-    "stagecraft-system",
+    "statecraft-system",
     "monitoring",
     "ingress-nginx",
     "flux-system",

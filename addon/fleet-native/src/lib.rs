@@ -1,4 +1,4 @@
-//! fleet-native: stagecraft's fleet placement core as a napi-rs addon.
+//! fleet-native: statecraft's fleet placement core as a napi-rs addon.
 //!
 //! Native `kube-rs` construction of the EnRaHiTu placement shape (spec 006 §3):
 //! one Namespace per tenant, and per app one PVC, Deployment (single replica,

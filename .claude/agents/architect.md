@@ -35,7 +35,7 @@ spec-spine is an installed CLI tool: a typed, hash-verifiable authority ledger o
 | Standard | `standards/spec/{constitution.md,contract.md,templates/}` | Durable principles, normative contract, spec template |
 | Derived | `.derived/` | Compiler output (registry, index), committed shards, read only through the binary |
 
-Specs are the source of truth: every feature starts as a spec under `specs/`, following `standards/spec/templates/spec-template.md`. The behavioral rules are in `.claude/rules/` (orchestrator, governed artifact reads, adversarial prompt refusal). The backlog protocol in `AGENTS.md` § Working the backlog governs build order (002 shell, 003 Postgres, 004 tenants, 005 factory, 006 fleet, 007 webapp; 008 governance is parallel-safe after 002): one session implements one spec, start to finish. The service map lives in `specs/001-stagecraft-thesis/spec.md` §3.
+Specs are the source of truth: every feature starts as a spec under `specs/`, following `standards/spec/templates/spec-template.md`. The behavioral rules are in `.claude/rules/` (orchestrator, governed artifact reads, adversarial prompt refusal). The backlog protocol in `AGENTS.md` § Working the backlog governs build order (002 shell, 003 Postgres, 004 tenants, 005 factory, 006 fleet, 007 webapp; 008 governance is parallel-safe after 002): one session implements one spec, start to finish. The service map lives in `specs/001-statecraft-thesis/spec.md` §3.
 
 ## Process
 
@@ -76,7 +76,7 @@ Break the work into ordered, atomic steps. For each step specify:
 - **Coupling drift**: code changes whose owning spec would no longer match (the `couple` gate fails)
 - **Missing specs**: work with no backing spec, which should be flagged
 - **Build-order issues**: steps that depend on uncommitted intermediate state, or on backlog specs not yet implemented
-- **License-boundary issues**: this repo is AGPL-3.0; the enrahitu template and stagecraft-cli are Apache-2.0 in their own repos. Flag any plan that moves code across the boundary.
+- **License-boundary issues**: this repo is AGPL-3.0; the enrahitu template and statecraft-cli are Apache-2.0 in their own repos. Flag any plan that moves code across the boundary.
 
 ## Output Format
 

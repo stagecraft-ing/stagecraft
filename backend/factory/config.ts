@@ -37,7 +37,7 @@ export const TEMPLATE_CACHE_DIR = join(FACTORY_DATA_DIR, "enrahitu.git");
 export const FACTORY_STAMPED_BY_ID = "statecraft/factory@1";
 
 /** Git commit author for the initial stamped commit (spec 005 §3 step 5). */
-export const FACTORY_GIT_AUTHOR_NAME = "Stagecraft Factory";
+export const FACTORY_GIT_AUTHOR_NAME = "statecraft Factory";
 export const FACTORY_GIT_AUTHOR_EMAIL = "factory@statecraft.ing";
 
 /** How long to wait for the born-green verify run before failing (spec 005 §3 step 6). */

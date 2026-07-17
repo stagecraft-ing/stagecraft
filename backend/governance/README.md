@@ -9,7 +9,7 @@ independently verifiable.
 
 ```
 encore.service.ts   the Encore service declaration
-native.ts           typed facade over @stagecraft/governance-native (the addon)
+native.ts           typed facade over @statecraft/governance-native (the addon)
 config.ts           state dir, committed gate config, anchor signing secret
 store.ts            CoreLedger index (attestation rows + trust snapshots)
 records.ts          POST /governance/records, GET /governance/records, GET /governance/verify
@@ -41,8 +41,8 @@ The addon is complete and its Rust tests pass
 gate → append → verify flow). This service's TypeScript is authored against the
 Encore + CoreLedger idiom but cannot typecheck, run, or be vitest-tested until
 the chassis (spec 002) lands: it imports `encore.dev/*`, `../core/ledger`
-(CoreLedger, spec 003), and `@stagecraft/governance-native` (built by the
+(CoreLedger, spec 003), and `@statecraft/governance-native` (built by the
 chassis npm install). When 002 lands, the service wiring rebases onto the shell
-(AGENTS.md backlog exception, 2026-07-14): add `@stagecraft/governance-native`
+(AGENTS.md backlog exception, 2026-07-14): add `@statecraft/governance-native`
 as a dependency, `npm run build` the addon, and the service typechecks and its
 vitest suite runs. The remaining acceptance items are tracked in spec 008 §6.
