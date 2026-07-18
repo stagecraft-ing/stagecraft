@@ -105,17 +105,31 @@ What remains (keeps this spec `in-progress`):
 
 - **Operator admin login** to rauthy (browser, session-based; not scripted).
 - **OIDC client seeding.** rauthy is fresh, so the catalog's client
-  ids/secrets (from the old rauthy) are not yet realized in it. Grafana's OIDC
-  login and the app clients (`OIDC_SPA`, `OIDC_M2M`, `RAUTHY_CLIENT`) need
-  seeding; the app clients are spec 009's concern (its chart runs the seeder).
+  ids/secrets (from the old rauthy) are not yet realized in it. The app clients
+  (`OIDC_SPA`, `OIDC_M2M`, `RAUTHY_CLIENT`) are spec 009's concern (its chart
+  runs the seeder). Grafana's OIDC client is now folded into that same 009
+  seeder pass rather than hand-seeded here (operator decision 2026-07-18): its
+  `grafana-oidc` Secret already materializes from SOPS, so only the client
+  registration in rauthy is pending, and doing it by hand would be exactly the
+  out-of-band mutation 009's seeder exists to own.
 - **object_storage read/write** against the Hetzner bucket needs the Encore app
   (spec 009); only "no in-cluster minio" is verifiable now (it holds).
 - **Fleet E2E** (spec 006 places an app): blocked on the same items the spec 006
   live run flagged (an amd64 enrahitu image, pull-secret provisioning).
 - **`deploy.` / `app.` DNS**: their services (deployd-api, the control plane)
   are not deployed here, so those records are deferred to specs 006 / 009.
-- **Repoint Flux from `feat/010-platform-layer` to `main`** after the PR merges
-  (patch the `flux-system` GitRepository `spec.ref.branch`).
+**Closeout verification (2026-07-18, continued).** The repoint is done: the
+`flux-system` GitRepository now tracks `main` (PR #28), and the platform was
+re-verified green reconciling `main@sha1:934b002c`: both `statecraft-hetzner-*`
+nodes Ready; all five Flux kustomizations and all five HelmReleases
+(cert-manager, ingress-nginx, reflector, kube-prometheus-stack, rauthy) Ready;
+the SOPS secrets materialized from ciphertext; zero `open-agentic-platform`
+references anywhere on the cluster; `auth.statecraft.ing` serving with
+`db_healthy: true`; and `grafana.statecraft.ing` serving over a valid cert. The
+remaining items above are gated on specs 009 (OIDC seeding, `object_storage`)
+and 006 (fleet E2E), plus the operator admin-login browser checkpoint, so this
+spec stays `in-progress`; the Flux repoint that used to sit in this list is the
+only one now closed.
 
 ## 2. Territory
 
