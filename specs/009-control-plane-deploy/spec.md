@@ -397,6 +397,24 @@ restores fail-loud resolution. This is the single highest-value line in the
 deployed config, because it converts the failure mode of section 2.2's
 seven-key Secret from a silent misconfiguration into a crash loop.
 
+**Done 2026-07-20, and it needed no override machinery.** The fix looked like
+it would require mounting a production config over the image's baked-in one,
+because `docker/Dockerfile.base:30` copies the generated
+`infra.config.docker.json` to `/encore/infra.config.json` and pins
+`ENCORE_INFRA_CONFIG_PATH` at it. It did not: **`infra.config.json` is
+production-only and local dev never reads it.** The enrahitu toolchain's
+`dev.mjs` augments from `infra.config.dev.json` instead (verified at
+`node_modules/@enrahitu/toolchain/bin/dev.mjs:50`), and that file carries its
+own `env_name: local`, `env_type: development`, `base_url:
+http://localhost:4000`. So `cloud: "local"` beside `env_type: "production"`
+was a pure production defect with no local consumer, and the correction is a
+literal edit: `cloud` is now `hetzner`, `base_url` is
+`https://app.statecraft.ing`. `env_name` stays `selfhost`, which is accurate.
+
+Encore's JSON schema types `cloud` as a free-form string, so this validates;
+the known-set check that matters lives in the runtime, which is precisely the
+layer this line steers.
+
 ### 4.3 The volume is the identity anchor
 
 This is the load-bearing operational consequence of the embedded topology and
@@ -568,9 +586,16 @@ Spec 010 provisioned the metrics sink: Prometheus with
 `enableRemoteWriteReceiver: true`, no ingress, no LoadBalancer, in-cluster
 only. This spec supplies the producer. Encore's self-host metrics config takes
 `{ type: "prometheus", remote_write_url, collection_interval }` in
-`infra.config.json`, which currently has **no metrics block at all**, so the
-control plane emits nothing today. Adding it, pointed at the in-cluster
-Prometheus service, is a spec 002 touch and a coordinated edit.
+`infra.config.json`, which had **no metrics block at all**, so the control
+plane emitted nothing.
+
+**Added 2026-07-20** as a spec 002 coordinated edit, pointed at
+`http://monitoring-prometheus.monitoring:9090/api/v1/write` with a 60 second
+collection interval. The service name was read from the live cluster rather
+than assumed: the kube-prometheus-stack release is named `monitoring`, so its
+service is `monitoring-prometheus`, and it is `ClusterIP` with no ingress and
+no LoadBalancer, which is the unexposed-sink posture spec 010 section 2.2
+requires. `collection_interval` is an integer in seconds per Encore's schema.
 
 **A contract delta, recorded rather than resolved.** Thesis section 3.4 states
 that every EnRaHiTu app exposes a Prometheus `/metrics` endpoint, which is a

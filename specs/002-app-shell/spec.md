@@ -169,6 +169,18 @@ enrahitu 018 §4 delegated to the first stamped consumer.
   eleven-secret count is unchanged, and the new `PLATFORM_S3_*` keys are
   deliberately not declared here, because the app never reads them.
 
+  **Production metadata and metrics, 2026-07-20 (spec 009 §4.2, §4.7).**
+  `infra.config.json` is production-only: `npm run dev` augments from
+  `infra.config.dev.json` instead
+  (`node_modules/@enrahitu/toolchain/bin/dev.mjs:50`), and only
+  `scripts/docker-build.sh` consumes the production file, so edits here do not
+  reach a local run. Two corrections followed. `cloud` moved from `local` to
+  `hetzner`, because `local` beside `env_type: production` silently disables
+  Encore's missing-secret guard and makes an unmounted secret read as `""`
+  rather than crash the pod; and `base_url` moved from `http://localhost:8080`
+  to `https://app.statecraft.ing`. A `metrics` block was added, pointed at the
+  in-cluster Prometheus, which the file previously lacked entirely.
+
 ## 4. Acceptance
 
 - From a clean checkout: `npm ci && npm --prefix frontend ci`,
