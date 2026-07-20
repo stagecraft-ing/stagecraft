@@ -1,0 +1,165 @@
+# The control plane: one container, one volume, one ingress (spec 009 section 4.2).
+#
+# Single replica is structural, not a simplification to lift later. The
+# container runs one embedded rauthy and one app hiqlite against one
+# ReadWriteOnce volume, so a second replica is a second IdP. Horizontal scale
+# is a substrate question (hiqlite Raft membership), not a `replicas:` value.
+# Recreate rather than RollingUpdate for the same reason: two pods must never
+# hold /data at once.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: statecraft
+  namespace: statecraft-system
+  labels:
+    statecraft.spec: "009-control-plane-deploy"
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: statecraft
+  template:
+    metadata:
+      labels:
+        app: statecraft
+    spec:
+      # The image declares no USER, so it runs as root and writes /data,
+      # /rauthy, and /data/rauthy/db directly. runAsNonRoot is deliberately
+      # NOT set: setting it without runAsUser is what broke the fleet's first
+      # live deploy (spec 006 E2E finding). fsGroup makes the hcloud volume
+      # group-writable, which is what the mount actually needs. Hardening the
+      # image to a non-root UID belongs upstream in the enrahitu chassis.
+      securityContext:
+        fsGroup: 1000
+      # The image is private. This Secret is provisioned by the operator, not
+      # by this tree, and is deliberately NOT the reflector-synced `ghcr-pull`:
+      # spec 009 section 4.1 records that the reflected one carries bot
+      # credentials without access to new packages.
+      imagePullSecrets:
+        - name: ghcr-pull
+      containers:
+        - name: statecraft
+          # Pinned by digest, never `:latest`. The tag is recorded alongside
+          # for human legibility only; the digest is what is deployed.
+          # tag: 85553d38216c9c5fdf5fefdab7587936ac6c52a6 (main, 2026-07-20)
+          image: ghcr.io/statecrafting/statecraft@sha256:5e7267f5a1be503c685689e948d8d7bb320e80d403db121e48c6099c78d7f6c7
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+          env:
+            # ---------------------------------------------------------------
+            # Identity. Both are applied ONLY while rauthy's database is
+            # uninitialized (migrate_init_prod returns early once the JWKS
+            # table is non-empty), so a wrong value at first boot is an
+            # admin-API correction, not a redeploy (spec 009 section 4.3
+            # rule 3). Do not edit these casually after go-live.
+            # ---------------------------------------------------------------
+            - name: ENRAHITU_PUBLIC_URL
+              value: "https://app.statecraft.ing"
+            - name: ENRAHITU_ADMIN_EMAIL
+              value: "admin@statecraft.ing"
+            # ---------------------------------------------------------------
+            # CoreLedger against the born-empty Postgres of spec 010. The
+            # driver is chosen by URL scheme (spec 003). POSTGRES_PASSWORD is
+            # declared first so the $(VAR) reference below resolves: Kubernetes
+            # expands only variables defined earlier in this same list.
+            # ---------------------------------------------------------------
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: statecraft-postgres
+                  key: POSTGRES_PASSWORD
+            - name: ENRAHITU_LEDGER_URL
+              value: "postgres://statecraft:$(POSTGRES_PASSWORD)@postgresql.statecraft-system:5432/statecraft"
+            # ---------------------------------------------------------------
+            # SMTP for the embedded rauthy (spec 009 section 4.8 item 1,
+            # closed 2026-07-20). Four non-secret values here; SMTP_PASSWORD
+            # arrives via envFrom below. The entrypoint forwards all five into
+            # the rauthy subshell only when SMTP_URL is set.
+            # ---------------------------------------------------------------
+            - name: SMTP_URL
+              value: "smtp.gmail.com"
+            - name: SMTP_PORT
+              value: "587"
+            - name: SMTP_USERNAME
+              value: "bartekus@gmail.com"
+            - name: SMTP_FROM
+              value: "Admin <admin@statecraft.ing>"
+            # ---------------------------------------------------------------
+            # Read by services, set by the deploy (spec 009 section 4.4).
+            # WEBAPP_BASE_URL is deliberately unset: an unset value yields a
+            # relative redirect onto this app's own origin, which is correct
+            # for a same-origin deploy, and setting it duplicates the origin
+            # somewhere it can drift.
+            # ---------------------------------------------------------------
+            - name: FLEET_BASE_DOMAIN
+              value: "deployd.xyz"
+            - name: FLEET_BACKUP_BUCKET
+              value: "oap-fleet-backups-prod"
+            - name: FLEET_BACKUP_S3_ENDPOINT
+              value: "https://nbg1.your-objectstorage.com"
+            - name: FLEET_RESTIC_IMAGE
+              value: "restic/restic:0.17.3"
+            - name: FACTORY_TEMPLATE_REPO
+              value: "statecrafting/enrahitu"
+            - name: FACTORY_TEMPLATE_REF
+              value: "main"
+            - name: FACTORY_DATA_DIR
+              value: "/data/factory"
+            - name: STATECRAFT_GOVERNANCE_CONFIG_DIR
+              value: "/data/governance/config"
+            - name: STATECRAFT_GOVERNANCE_STATE_DIR
+              value: "/data/governance/state"
+          # The seven keys of spec 009 section 2.2, and no others. Notably
+          # absent: the four JWT_* PEMs and RAUTHY_CLIENT_SECRET, which the
+          # entrypoint unconditionally overwrites from /data. Injecting them
+          # is forbidden rather than merely redundant, because a Secret key
+          # the container ignores reads as configured while having no effect.
+          envFrom:
+            - secretRef:
+                name: statecraft-secrets
+          volumeMounts:
+            - name: data
+              mountPath: /data
+          # Startup is slow and variable on first boot: first-boot.mjs
+          # generates two RSA keypairs, then the entrypoint waits up to 60s
+          # for rauthy's health before starting the app. 60 x 5s = 5 minutes
+          # of grace before liveness can fire.
+          startupProbe:
+            tcpSocket:
+              port: http
+            periodSeconds: 5
+            failureThreshold: 60
+          # Liveness is a TCP check on purpose. /health queries CoreLedger, so
+          # an HTTP liveness probe would kill a perfectly healthy pod whenever
+          # Postgres blipped. Process-alive is the right liveness signal here;
+          # the entrypoint's die-together supervision already exits the
+          # container if either process falls over.
+          livenessProbe:
+            tcpSocket:
+              port: http
+            periodSeconds: 20
+            timeoutSeconds: 5
+            failureThreshold: 3
+          # Readiness DOES gate on the database, which is the point: a pod
+          # that cannot reach CoreLedger should not receive traffic.
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              memory: 2Gi
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: statecraft-data

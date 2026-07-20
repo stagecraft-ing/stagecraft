@@ -11,14 +11,15 @@ depends_on:
 establishes:
   - ".github/workflows/image.yml"
   - ".dockerignore"
-# Further ownership edges land with their units during implementation (owned
-# paths and this spec move together): the manifest subtree
-# infra/gitops/clusters/statecraft-hetzner/statecraft/ and its tier file arrive
-# with the manifests in stage 2 (relocated from a top-level `deploy/` on
-# 2026-07-20, see section 3), and .github/workflows/{cd,ai-pr-review,
-# ai-changelog}.yml with theirs. The subtree is deliberately not declared while
-# it does not exist: this spec is `in-progress`, so spec-spine enforces that a
-# declared directory unit is a real directory (I-007).
+  - { kind: directory, path: "infra/gitops/clusters/statecraft-hetzner/statecraft/" }
+  - "infra/gitops/clusters/statecraft-hetzner/statecraft-kustomization.yaml"
+# The manifest subtree landed 2026-07-20 and is declared above. It sits inside
+# spec 010's `infra/` on the nested-ownership pattern this corpus already uses
+# (spec 002 owns backend/ while 004, 005, 006, and 008 own subdirectories
+# inside it), which is what let the relocation off a top-level `deploy/`
+# happen without a second location for Kubernetes YAML (section 3).
+# Still to land with their units: .github/workflows/{cd,ai-pr-review,
+# ai-changelog}.yml.
 summary: >
   Stand the control plane up on the spec 010 cluster as a platform-grade K8s
   deployment at app.statecraft.ing. Rewritten ground-up 2026-07-19 to the
@@ -316,6 +317,37 @@ successor task. Platform observability is the in-substrate flag-gated
   The one genuine spec 010 touch is a single line added to that tree's root
   `kustomization.yaml` resource list, which is a coordinated edit, not a
   waiver.
+
+  **Landed 2026-07-20:** the tier file plus `pvc.yaml`, `deployment.yaml`,
+  `service.yaml`, `ingress.yaml`, and `backup-cronjob.yaml`. All five validate
+  against the live API server by `kubectl apply --dry-run=server`, which is
+  admission validation rather than schema parsing and is non-mutating. Three
+  authoring decisions are worth stating here because a reader would otherwise
+  read their absence as an oversight.
+
+  **The tier sets `wait: false`, unlike every other tier in the tree.** First
+  boot generates two RS256 keypairs and rauthy's whole database before the app
+  answers, and the Deployment cannot become Ready until an operator has
+  provisioned the pull secret and the SOPS Secrets. Tying the tier's Ready to
+  that would wedge the entire reconciliation on a human step.
+
+  **The seeder Job is deliberately not shipped.** Section 4.5 specifies one,
+  but it authenticates with `RAUTHY_ADMIN_TOKEN`, which first boot cannot mint:
+  `first-boot.mjs` composes only `clients.json`, never `api_keys.json` (section
+  4.8 item 3). A Job that cannot authenticate is worse than no Job, because it
+  fails on every reconcile and reads as configured. The GitHub upstream
+  provider is therefore created through the admin UI with the break-glass
+  account, which is precisely the fallback section 4.5 already names, and the
+  same gap means `statecraft_operator` is created by hand rather than from a
+  `roles.json`.
+
+  **The pod runs as root, deliberately.** The image declares no `USER`, and it
+  writes `/data`, `/rauthy`, and `/data/rauthy/db` directly. Setting
+  `runAsNonRoot` without a matching `runAsUser` is exactly what broke the
+  fleet's first live deploy (spec 006 E2E finding), so the manifest sets
+  `fsGroup` (which is what the hcloud mount actually needs) and nothing else.
+  Hardening the image to a non-root UID is an enrahitu chassis change, not
+  something to improvise in a Deployment on the way to first boot.
 - `.github/workflows/cd.yml`: on push to `main` (sha-pinned) and on
   `workflow_dispatch`; never floats `latest` onto the running release.
 - `.github/workflows/ai-pr-review.yml` and `ai-changelog.yml`: ported from OAP
@@ -459,6 +491,27 @@ Three rules follow.
    `PLATFORM_S3_RESTIC_PASSWORD` belongs with the break-glass material
    (section 4.6): losing it and the volume together is unrecoverable, since
    nothing else decrypts the backup.
+
+   **Landed 2026-07-20 as `backup-cronjob.yaml`**, daily at 02:30 UTC against
+   `statecraft-platform-backup`, retaining 7 daily / 4 weekly / 6 monthly.
+   Two limitations are recorded rather than papered over, because both bound
+   what a restore can promise.
+
+   First, it is a **crash-consistent** copy, not a quiesced one: restic reads
+   `/data` while rauthy's hiqlite is live, so a restored snapshot is
+   equivalent to pulling power at that instant. The fleet solves this by
+   scaling the workload to 0 first, which is unavailable here because scaling
+   the control plane to 0 is a platform outage. A genuinely consistent backup
+   needs rauthy's native hiqlite S3 backup, which is section 4.8 item 2, and
+   that remains the real fix rather than this.
+
+   Second, the PVC is `ReadWriteOnce`, so the Job carries a **required**
+   podAffinity onto the app pod's node. Required rather than preferred on
+   purpose: a scheduling failure should surface as a failed Job, not as a
+   backup that silently never runs.
+
+   The rehearsed restore this spec's acceptance calls for is therefore also
+   the test of whether crash-consistency is good enough in practice.
 3. **`ENRAHITU_PUBLIC_URL` must be correct before first boot.** The client
    bootstrap derives `redirect_uris`, `post_logout_redirect_uris`, and
    `allowed_origins` from it, and rauthy applies bootstrap data only while its

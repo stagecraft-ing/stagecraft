@@ -253,13 +253,25 @@ cannot see.
 Unchanged by the realignment, and restated so the retirements above are
 not read as a wider retreat:
 
-- **The in-repo Flux GitOps tree**, four tiers with `dependsOn`
-  (`namespaces` -> `secrets` + `infrastructure` -> `manifests`). Decided
-  2026-07-16 and still right: the cluster's definition is governed by the
-  same spine as everything else, so `spec-spine couple` binds an
-  infrastructure change to this spec the way it binds a code change. The
-  cost (Flux needs a deploy key on a repo that also holds application
-  code) is contained by path-scoped kustomizations.
+- **The in-repo Flux GitOps tree**, five tiers with `dependsOn`
+  (`namespaces` -> `secrets` + `infrastructure` -> `manifests` +
+  `statecraft`). Decided 2026-07-16 and still right: the cluster's
+  definition is governed by the same spine as everything else, so
+  `spec-spine couple` binds an infrastructure change to this spec the way
+  it binds a code change. The cost (Flux needs a deploy key on a repo that
+  also holds application code) is contained by path-scoped kustomizations.
+
+  **The fifth tier arrived 2026-07-20 and is not this spec's.**
+  `statecraft-kustomization.yaml` and everything under `statecraft/` are
+  spec 009's, declared by that spec and nested inside this one's `infra/`
+  on the pattern spec 002 already uses for `backend/`. Adding it to the
+  root `kustomization.yaml` resource list is the single line this spec
+  owns in that change, and it is a coordinated edit rather than a waiver:
+  the tree's entry point is substrate, the application it points at is
+  not. This is also the boundary that kept the manifests out of a second
+  top-level directory (spec 009 §3), so it is worth stating positively
+  rather than leaving as a one-line diff: **the cluster owns the tree, and
+  each tier is owned by whichever spec owns what that tier places.**
 - **SOPS** for cluster secrets: values encrypted in git, documentation
   beside them, no plaintext at rest, every rotation an auditable commit.
 - **cert-manager**, both ClusterIssuers, DNS-01 Cloudflare as the default.
