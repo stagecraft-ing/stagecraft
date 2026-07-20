@@ -4,8 +4,13 @@
     "app_id": "statecraft",
     "env_name": "selfhost",
     "env_type": "production",
-    "cloud": "local",
-    "base_url": "http://localhost:8080"
+    "cloud": "hetzner",
+    "base_url": "https://app.statecraft.ing"
+  },
+  "metrics": {
+    "type": "prometheus",
+    "remote_write_url": "http://monitoring-prometheus.monitoring:9090/api/v1/write",
+    "collection_interval": 60
   },
   "secrets": {
     "JWT_PRIVATE_KEY": { "$env": "JWT_PRIVATE_KEY" },
