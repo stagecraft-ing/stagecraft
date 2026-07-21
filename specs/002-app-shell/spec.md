@@ -152,6 +152,30 @@ enrahitu 018 §4 delegated to the first stamped consumer.
    whole container. This is the fourth reason the next chassis sync must not
    blind-revert this file, and it and the SMTP transport hunk together are the
    argument for making the upstream mirror a priority rather than a someday.
+
+   **A fifth divergence, in `backend/idp/proxy.ts` not the entrypoint,
+   2026-07-21: strip the browser's `Sec-Fetch-*` headers.** The rauthy
+   passthrough proxy forwards to the loopback rauthy with undici `fetch()`, and
+   undici unconditionally sets `Sec-Fetch-Mode` to `cors` (a fetch() call always
+   stamps its own request mode over any value passed). rauthy's CSRF guard
+   (`src/middlewares/src/csrf_protection.rs`) allows a cross-site top-level
+   `navigate` but blocks a cross-site `cors`, and its provider callback is not on
+   the path-exception list, so the rewrite turns the GitHub upstream login's
+   return leg (`GitHub -> /auth/v1/providers/callback`) into a "cross-origin
+   request forbidden" `BadRequest`. It was found the only way it could be, by a
+   real operator login reaching GitHub and bouncing off the callback. The proxy
+   now drops every `sec-fetch-*` request header, so rauthy takes its
+   header-absent path and leans on the CSRF defenses this proxy does not corrupt
+   (the OAuth `state` parameter, PKCE, and `__Host-` SameSite cookies).
+   Verified live: sending `Sec-Fetch-Mode: navigate` through the proxy still
+   reached rauthy as `cors` and was blocked, while sending no `Sec-Fetch`
+   headers was allowed.
+
+   Unlike the four entrypoint hunks this touches an app source file, so it is
+   baked into the image at build time and cannot be reached by a manifest. It is
+   the fifth reason the chassis sync must not blind-revert statecraft's copies,
+   and it belongs in the same upstream mirror, since any enrahitu app that puts
+   its rauthy behind this proxy and uses an upstream provider hits it.
 2. The root `package.json` is written fresh, not copied: app name
    `statecraft`, `@enrahitu/toolchain` and `@enrahitu/hiqlite-native`
    pinned to `0.1.0` from the registry (binaries resolve from

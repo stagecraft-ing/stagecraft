@@ -37,6 +37,19 @@ function forwardHeaders(req: IncomingMessage): Headers {
   for (const [key, value] of Object.entries(req.headers)) {
     const name = key.toLowerCase();
     if (HOP_BY_HOP.has(name) || name === "host") continue;
+    // Drop the browser's Sec-Fetch-* metadata. This proxy forwards via undici
+    // fetch(), which unconditionally rewrites Sec-Fetch-Mode to `cors` (it is a
+    // forbidden request header a fetch() call always sets to its own mode). A
+    // corrupted value is worse than none: rauthy's CSRF guard reads
+    // Sec-Fetch-Mode and allows a top-level `navigate` but not `cors`, so the
+    // rewrite makes every genuine cross-site navigation through this proxy look
+    // like a forged cors request. That false-positive blocks rauthy's own
+    // upstream-provider callback (GitHub -> /auth/v1/providers/callback) with
+    // "cross-origin request forbidden". Forwarding none lets rauthy fall back to
+    // its header-absent path and rely on its other CSRF defenses (the OAuth
+    // `state` parameter, PKCE, and __Host- SameSite cookies), which this proxy
+    // does not touch.
+    if (name.startsWith("sec-fetch-")) continue;
     for (const v of Array.isArray(value) ? value : value === undefined ? [] : [value]) {
       headers.append(key, v);
     }
