@@ -133,6 +133,25 @@ enrahitu 018 §4 delegated to the first stamped consumer.
    client's redirect URIs on first boot and is thereafter correctable only
    through the admin API. The defect belongs to the derivation, so the
    derivation is where it is fixed.
+
+   **A fourth hunk, 2026-07-21: forward `SMTP_STARTTLS_ONLY`.** The SMTP
+   passthrough forwarded five variables and dropped this sixth, which made mail
+   deliverable only on an implicit-TLS port (465). rauthy builds its transport
+   with lettre's `relay()` and only switches to `starttls_relay()` when
+   `starttls_only` is set, so a STARTTLS port (587) cannot be used without it.
+   That is not a niche preference: providers commonly block outbound 465, and
+   the statecraft cluster's own network does (Hetzner blocks 465 and 25, leaves
+   587 open, verified from a pod), so 587 was the only reachable port and it was
+   unreachable without this flag. The entrypoint now forwards it alongside the
+   other five, still gated on `SMTP_URL`.
+
+   The consequence of the gap was not a lost feature but an outage. rauthy's
+   `create_mailer` `panic!`s once its connection retries are exhausted
+   (`src/data/src/email/mailer.rs`, doc-commented "# Panics"), and this
+   entrypoint supervises die-together, so an unreachable mailer crash-loops the
+   whole container. This is the fourth reason the next chassis sync must not
+   blind-revert this file, and it and the SMTP transport hunk together are the
+   argument for making the upstream mirror a priority rather than a someday.
 2. The root `package.json` is written fresh, not copied: app name
    `statecraft`, `@enrahitu/toolchain` and `@enrahitu/hiqlite-native`
    pinned to `0.1.0` from the registry (binaries resolve from
