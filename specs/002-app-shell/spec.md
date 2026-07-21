@@ -107,6 +107,32 @@ enrahitu 018 §4 delegated to the first stamped consumer.
    sync must not silently revert it**: re-importing enrahitu's
    `docker/entrypoint.sh` wholesale would remove the mail transport without
    any gate noticing, since no test covers it.
+
+   **A third hunk, 2026-07-21: `RP_ORIGIN` must carry an explicit port.** The
+   entrypoint set `RP_ORIGIN="$PUBLIC_URL"`, and rauthy aborts on it. Its
+   config validator parses that value with `rsplit_once(':')` and parses the
+   tail as a `u16` (`src/data/src/rauthy_config.rs`), so a bare
+   `https://app.statecraft.ing` splits at the *scheme* colon and fails on
+   `//app.statecraft.ing`, panicking with "Invalid value for
+   `webauthn.rp_origin` port" before rauthy ever serves. The entrypoint now
+   rebuilds the origin from the `hostport` it already parses, appending the
+   scheme's default port when the public URL carries none.
+
+   This is a genuine upstream chassis bug and not a statecraft
+   misconfiguration: any enrahitu app whose `ENRAHITU_PUBLIC_URL` omits an
+   explicit port cannot boot its embedded rauthy at all. It went unseen
+   because it is unreachable locally, where the public URL is
+   `http://localhost:4000` and therefore already has a port. It is the third
+   reason the next chassis sync must not blind-revert this file, and it
+   raises the priority of the upstream mirror above.
+
+   **Why the deploy must not "fix" this by setting a port in the public URL.**
+   Adding `:443` to `ENRAHITU_PUBLIC_URL` also clears the panic, and it is the
+   wrong repair: that variable is the container's identity input (spec 009
+   §4.3 rule 3), so a port-suffixed value is burned into the issuer and the
+   client's redirect URIs on first boot and is thereafter correctable only
+   through the admin API. The defect belongs to the derivation, so the
+   derivation is where it is fixed.
 2. The root `package.json` is written fresh, not copied: app name
    `statecraft`, `@enrahitu/toolchain` and `@enrahitu/hiqlite-native`
    pinned to `0.1.0` from the registry (binaries resolve from

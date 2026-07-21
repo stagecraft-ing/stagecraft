@@ -519,6 +519,29 @@ Three rules follow.
    purpose: a scheduling failure should surface as a failed Job, not as a
    backup that silently never runs.
 
+   **The co-mount defect, found live 2026-07-21.** Same-node scheduling is
+   necessary but was not sufficient, and the first scheduled run proved it: the
+   Job sat in `ContainerCreating` for sixteen hours against
+   `MountVolume.SetUp failed [...] mount failed: exit status 255 [...] Resource
+   busy`. The cause was the manifest declaring `readOnly: true` on the
+   **`persistentVolumeClaim`** rather than only on the `volumeMount`. A
+   read-only claim makes the hcloud CSI driver publish a second, fresh `-o ro`
+   mount of the underlying block device, which the kernel refuses while the app
+   pod holds that device mounted read-write; without it the driver bind-mounts
+   the already-staged volume, which is what co-location was for. The
+   `volumeMount` keeps `readOnly: true`, so the container's read-only view is
+   unchanged and only the publish path differs.
+
+   The design of this rule is unaffected, which is why it is corrected here
+   rather than reopened: the mechanism is still a same-node restic sidecar Job
+   against the live volume. What the incident changes is the confidence this
+   spec can express about it. Acceptance already required a rehearsed restore;
+   it now also requires observing **one Job run to completion**, because this
+   failure mode is invisible from the CronJob object alone. `kubectl get
+   cronjob` reported a healthy schedule with a recent `LAST SCHEDULE` the whole
+   time it was failing, which is exactly the "reads as configured" failure the
+   seeder Job was kept out of the tree to avoid (section 3).
+
    The rehearsed restore this spec's acceptance calls for is therefore also
    the test of whether crash-consistency is good enough in practice.
 3. **`ENRAHITU_PUBLIC_URL` must be correct before first boot.** The client
@@ -674,9 +697,11 @@ OTel traces are in the same position and are not configured here.
 
 ### 4.8 Upstream gaps this deploy surfaces
 
-Four items belong to the enrahitu chassis, not to this repo, and are recorded
-here because this deploy is what makes them concrete. **Item 1 was closed on
-2026-07-20**; the other three stand.
+Five items belong to the enrahitu chassis, not to this repo, and are recorded
+here because this deploy is what makes them concrete. **Items 1 and 2 were
+closed on 2026-07-20 and item 5 on 2026-07-21**, each by editing this repo's
+copy of `docker/entrypoint.sh`; items 3 and 4 stand. The three closures are one
+accumulating divergence from upstream, tracked in spec 002.
 
 1. **The embedded rauthy has no SMTP. CLOSED 2026-07-20.** The entrypoint
    exported no mail configuration, so rauthy kept its `smtp_url = 'localhost'`
@@ -732,9 +757,38 @@ here because this deploy is what makes them concrete. **Item 1 was closed on
    key need `first-boot.mjs` to compose `roles.json` and `api_keys.json`
    (section 4.5).
 4. **No `/metrics` pull endpoint** (section 4.7).
+5. **`RP_ORIGIN` was derived without a port, and it blocked first boot.
+   CLOSED 2026-07-21.** The entrypoint passed `ENRAHITU_PUBLIC_URL` straight
+   into rauthy's `RP_ORIGIN`. rauthy validates that value by splitting on the
+   last colon and parsing the tail as a port, so a bare
+   `https://app.statecraft.ing` failed on the scheme colon and aborted the
+   process before it served. The fix rebuilds the origin with an explicit port
+   (spec 002 carries the mechanism and the reasoning).
 
-None of these block the deploy; all four constrain what the deployed platform
-can honestly claim, which is why they are named.
+   **This is the one item on this list that was not merely a capability loss.**
+   Items 1 through 4 constrain what the platform can claim; this one meant the
+   platform did not run. It is also the item this deploy was uniquely
+   positioned to find: it cannot reproduce locally, where the public URL is
+   `http://localhost:4000` and already carries a port, so the first
+   port-less public URL in the project's history was the production one.
+
+   The cost was seventeen hours of `CrashLoopBackOff` (214 restarts) that no
+   gate reported, because every gate this repo runs is green on the change that
+   shipped it: the image builds, the manifests pass server-side admission, the
+   coupling gate is satisfied, and the Deployment's own tier sets `wait: false`
+   (section 3) so Flux reports the tier Ready while the pod never becomes so.
+   That combination is worth stating plainly rather than filing as bad luck:
+   **this repo currently has no gate that fails when the published image cannot
+   start.** Section 4.1 declined a `/health` smoke test in the image job on the
+   grounds that the control plane needs Postgres; that reasoning holds for the
+   app but not for the embedded rauthy, which needs nothing but its own volume
+   and would have panicked identically in CI. Closing that hole is an enrahitu
+   chassis question (the entrypoint is the unit under test), and it is named
+   here as the successor task rather than improvised into this deploy.
+
+None of items 1 through 4 block the deploy; all four constrain what the
+deployed platform can honestly claim, which is why they are named. Item 5 did
+block it, and is closed.
 
 ### 4.9 Ported CI
 

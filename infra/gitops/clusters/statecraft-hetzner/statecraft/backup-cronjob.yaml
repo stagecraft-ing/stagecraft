@@ -104,4 +104,10 @@ spec:
             - name: data
               persistentVolumeClaim:
                 claimName: statecraft-data
-                readOnly: true
+                # Deliberately NOT `readOnly: true`. A read-only claim makes the
+                # hcloud CSI driver publish a second, fresh `-o ro` mount of the
+                # block device instead of bind-mounting the volume the app pod
+                # already staged read-write, which fails with "Resource busy" and
+                # wedges every run in ContainerCreating. The read-only guarantee
+                # this job actually needs is the volumeMount above, which is a
+                # bind-mount flag and composes with the live mount.
