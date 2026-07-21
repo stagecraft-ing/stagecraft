@@ -43,7 +43,21 @@ host="${hostport%%:*}"
     export COOKIE_MODE=danger-insecure
   fi
   export RP_ID="$host"
-  export RP_ORIGIN="$PUBLIC_URL"
+  # rauthy validates rp_origin with `rsplit_once(':')` and requires an explicit
+  # port (src/data/src/rauthy_config.rs). A bare `https://host` splits at the
+  # scheme colon, leaving `//host` to fail the u16 parse, which aborts startup
+  # with "Invalid value for `webauthn.rp_origin` port". Rebuild the origin from
+  # the already-parsed host:port, defaulting to the scheme's port.
+  case "$hostport" in
+    *:*) export RP_ORIGIN="$proto://$hostport" ;;
+    *)
+      if [ "$proto" = "https" ]; then
+        export RP_ORIGIN="$proto://$hostport:443"
+      else
+        export RP_ORIGIN="$proto://$hostport:80"
+      fi
+      ;;
+  esac
   export ENC_KEYS="$RAUTHY_ENC_KEYS"
   export ENC_KEY_ACTIVE="$RAUTHY_ENC_KEY_ACTIVE"
   export HQL_SECRET_RAFT="$RAUTHY_HQL_SECRET_RAFT"
