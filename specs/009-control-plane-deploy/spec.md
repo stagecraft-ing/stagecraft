@@ -456,6 +456,44 @@ Encore's JSON schema types `cloud` as a free-form string, so this validates;
 the known-set check that matters lives in the runtime, which is precisely the
 layer this line steers.
 
+**Tested live 2026-07-21, and the premise does not hold for these secrets.**
+The claim above, including its "single highest-value line" billing, was verified
+by the deliberate fail-loud test section 5 asks for, and it failed. With
+`cloud: hetzner` in effect (confirmed: the runtime logs `CLOUD_UNSPECIFIED`),
+`GITHUB_WEBHOOK_SECRET` was removed from the pod Secret and the pod rolled. It
+came up **healthy**, and a request to `/github/webhook` returned `401 invalid
+signature`, not the expected crash or a `500 secret ... is not set`. The
+resolver returned an empty string and the service proceeded to verify signatures
+against it, rejecting every webhook: precisely the silent-empty degradation this
+line was supposed to abolish.
+
+The reason is a layer this section did not account for. All eleven secrets are
+declared in `infra.config.json` as `{"$env": "<NAME>"}` bindings, and section
+2.2 deliberately keeps every one of those declarations. So a secret is **never
+"absent from the runtime config"**; it is always configured, to whatever its
+env var holds. When the env var is unset the `$env` reference resolves to the
+empty string, and "configured to empty" never reaches the "not set" branch that
+`cloud != local` re-arms. The `metadata.cloud` distinction is real, but it
+governs genuinely unconfigured secrets (the twelfth, `GovernanceAnchorKey`,
+which has no `$env` binding, is the one that would actually throw), not the nine
+this deploy delivers. `fromSecretOrEnv` (`backend/tenants/config.ts`,
+`backend/fleet/config.ts`) then trims the empty value and falls through to
+`process.env`, which envFrom left equally empty, so the silence is doubled
+exactly as the paragraph above feared, just for a different reason than it gave.
+
+A second correction rides along: these secrets are read **lazily**, inside
+per-request config getters, so a missing one does not crash-loop the pod at
+boot at all. It yields a healthy pod that fails only when the owning endpoint is
+first exercised. The section 5 acceptance wording ("crash-loops the pod") is
+wrong on both counts, and is corrected there.
+
+**What real fail-loud would take**, recorded as a recommendation rather than
+built here: an explicit startup assertion that the nine required secrets resolve
+non-empty (the shape `scripts/verify-born-with.mjs` already uses for other
+born-with material), which fails closed regardless of Encore's `$env` behavior.
+That is a chassis-or-app change with an owner to assign, not a manifest edit, so
+it is named and left for a spec that owns the startup path.
+
 ### 4.3 The volume is the identity anchor
 
 This is the load-bearing operational consequence of the embedded topology and
@@ -896,6 +934,16 @@ check is wanted, not OAP's service-specific fan-out.
 - Missing secrets fail loud: with `metadata.cloud` off `local` (section 4.2),
   removing a required key from the Secret crash-loops the pod rather than
   yielding an empty credential. Verified once, deliberately, before go-live.
+  **Tested 2026-07-21, and NOT met.** The test was run and the premise failed:
+  a removed `GITHUB_WEBHOOK_SECRET` yielded a healthy pod and a silent empty
+  credential (`/github/webhook` returned `401`, not a crash or a
+  `secret ... is not set`), because every secret is `$env`-bound in
+  `infra.config.json` and an unset env var resolves to empty rather than
+  "not set" (section 4.2). This criterion is not currently satisfiable by the
+  `metadata.cloud` mechanism alone; closing it needs an explicit non-empty
+  startup assertion (section 4.2's recommendation). Two of this criterion's
+  own words are also wrong: resolution is lazy, so a missing secret fails at
+  first use of the owning endpoint, not as a boot crash-loop.
 - `https://app.statecraft.ing` serves the governance UI over a real cert (not
   the ingress default certificate).
 - OIDC discovery at `https://app.statecraft.ing/auth/v1/.well-known/openid-configuration`
@@ -940,10 +988,15 @@ initialized rauthy hiqlite database all exist under `/data`.
 - **A real login has not completed end to end**, so spec 010's deferred
   acceptance stays deferred, and the `statecraft_operator` claim has not been
   observed reaching the app's user model (checkpoint 5).
-- **Fail-loud has never been exercised.** Section 4.2's promise that a missing
-  key crash-loops the pod is still a reasoned claim about
-  `metadata.cloud: hetzner`, not an observation. It calls for verifying "once,
-  deliberately, before go-live", and that deliberate test has not been run.
+- **Fail-loud is exercised and does not hold.** The deliberate test section 5
+  asks for was run on 2026-07-21, and it disproved the mechanism rather than
+  confirming it: a removed required secret yields a healthy pod and a silent
+  empty credential, because `$env`-bound secrets resolve absent-as-empty and
+  never reach the `cloud != local` throw path (section 4.2). Real fail-loud
+  needs an explicit non-empty startup assertion, which is named as a
+  recommendation and left to the spec that owns the startup path. This is a
+  genuine open gap, not a formality: a forgotten or misspelled secret degrades
+  this platform silently today.
 - **`ai-pr-review.yml` does not exist**, so that line cannot be claimed.
 
 **Closed after the initial bring-up, 2026-07-21:**
