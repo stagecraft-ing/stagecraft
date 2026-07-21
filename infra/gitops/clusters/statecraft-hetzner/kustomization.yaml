@@ -21,3 +21,7 @@ resources:
   - secrets-kustomization.yaml
   - infrastructure-kustomization.yaml
   - manifests-kustomization.yaml
+  # The control-plane tier (spec 009). This one line is the only spec 010
+  # touch the relocation of spec 009's manifests required; the tier file and
+  # everything under statecraft/ are spec 009's.
+  - statecraft-kustomization.yaml

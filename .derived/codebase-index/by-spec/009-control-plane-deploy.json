@@ -13,9 +13,30 @@
       {
         "path": ".github/workflows/image.yml",
         "source": "spec-edge"
+      },
+      {
+        "path": "infra/gitops/clusters/statecraft-hetzner/statecraft-kustomization.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "infra/gitops/clusters/statecraft-hetzner/statecraft/",
+        "source": "spec-edge"
       }
     ],
     "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "infra/gitops/clusters/statecraft-hetzner/statecraft/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "infra/gitops/clusters/statecraft-hetzner/statecraft/"
+        }
+      },
       {
         "locations": [
           {
@@ -41,11 +62,24 @@
           "kind": "file",
           "path": ".github/workflows/image.yml"
         }
+      },
+      {
+        "locations": [
+          {
+            "file": "infra/gitops/clusters/statecraft-hetzner/statecraft-kustomization.yaml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "infra/gitops/clusters/statecraft-hetzner/statecraft-kustomization.yaml"
+        }
       }
     ],
     "specId": "009-control-plane-deploy",
     "specStatus": "approved"
   },
   "schemaVersion": "1.1.0",
-  "shardHash": "9c7d2330a6e028d89c8a1632b43cd7e3822e7cc8935362296dd373d304570783"
+  "shardHash": "406d104219de5aa659965a68ddc2432a25ca3d4fda531c4f904a207d824cff71"
 }
