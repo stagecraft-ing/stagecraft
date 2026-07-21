@@ -72,9 +72,20 @@ host="${hostport%%:*}"
   # Without this rauthy keeps its `smtp_url = 'localhost'` default and every
   # send fails: no password reset, no email verification, no MFA recovery.
   # Gated on SMTP_URL so a local trial of the image needs no mail server.
+  #
+  # SMTP_STARTTLS_ONLY is in this list and must stay. rauthy builds its
+  # transport with lettre's `relay()`, which opens TLS immediately and therefore
+  # needs an implicit-TLS port (465); only when `starttls_only` is set does it
+  # use `starttls_relay()` and speak to a STARTTLS port (587). Providers commonly
+  # block outbound 465, which leaves 587 as the only reachable port, and 587
+  # without this variable fails the handshake against the server's plaintext
+  # greeting. Omitting it is not a lost setting but an unreachable mailer, and
+  # rauthy `panic!`s on an unreachable mailer once its retries are exhausted
+  # (src/data/src/email/mailer.rs), which this entrypoint's die-together
+  # supervision turns into a whole-container crash loop.
   if [ -n "${SMTP_URL:-}" ]; then
     export SMTP_URL
-    for _smtp in SMTP_PORT SMTP_USERNAME SMTP_PASSWORD SMTP_FROM; do
+    for _smtp in SMTP_PORT SMTP_USERNAME SMTP_PASSWORD SMTP_FROM SMTP_STARTTLS_ONLY; do
       if [ -n "${!_smtp:-}" ]; then export "${_smtp?}"; fi
     done
     echo "[entrypoint] rauthy SMTP enabled via $SMTP_URL"
