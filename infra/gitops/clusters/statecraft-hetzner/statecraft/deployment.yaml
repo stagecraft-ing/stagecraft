@@ -43,9 +43,12 @@ spec:
         - name: statecraft
           # Pinned by digest, never `:latest`. The tag is recorded alongside
           # for human legibility only; the digest is what is deployed.
-          # tag: c475934 (main, 2026-07-21) - adds rauthy's native hiqlite S3
-          # backup on top of the SMTP wiring and the production infra config.
-          image: ghcr.io/statecrafting/statecraft@sha256:740c7847686f6405fc536c9025ab0a4d8453073fb9df371bfd0a43021fe1855a
+          # tag: a998732 (009-rauthy-rp-origin-port, 2026-07-21) - gives rauthy
+          # an RP_ORIGIN carrying an explicit port. The prior digest (740c7847,
+          # built from c475934) could not start at all: rauthy panicked on the
+          # port-less origin before serving, and the pod logged 214 restarts
+          # over 17 hours. See spec 009 section 4.8 item 5.
+          image: ghcr.io/statecrafting/statecraft@sha256:e9c146dcc3cdcebbfff811b70dbb92aebf20613b84f020e23479bb627357b553
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
