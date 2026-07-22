@@ -107,6 +107,6 @@
     "summary": "statecraft becomes a running EnRaHiTu app: the slimmed chassis from statecrafting/enrahitu is brought into this repo (the two-directory backend/ + frontend/ layout, CoreLedger, auth baseline, rauthy proxy, health, packaging, verify workflow; the Encore toolchain and the hiqlite addon arrive as pinned @enrahitu/* npm packages, not vendored source), stamped with app name \"statecraft\". After this spec the control plane boots, authenticates, and tests green; every later service spec (004+) adds Encore services onto this shell. This is deliberate dogfooding: the platform is stamped from the same template it will stamp for customers.\n",
     "title": "The control plane's EnRaHiTu app shell"
   },
-  "shardHash": "5070e66e1c6978d2bd92730d1d5c1f2a28d8f8a4fe9e61ad360e1b45b45a75a9",
+  "shardHash": "f99ed72bf431ad91ecaf2554eb3350b28ede773f7d60f979a55db6d5dc655f3e",
   "specVersion": "1.1.0"
 }
