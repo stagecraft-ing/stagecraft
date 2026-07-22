@@ -296,7 +296,13 @@ export const remove = api(
       throw APIError.invalidArgument(`confirm must equal the app name "${app.name}"`);
     }
 
-    const gated = await gateOrDeny("remove", { tenantId: app.tenantId, app: app.name, appId }, "strict");
+    // The gate's confirm-name-required check (governance-native gate.v1) demands
+    // the typed confirmation echoed as confirm_name against subject_name.
+    const gated = await gateOrDeny(
+      "remove",
+      { tenantId: app.tenantId, app: app.name, appId, subject_name: app.name, confirm_name: confirm },
+      "strict",
+    );
     const op = await startOp(app.id, "remove");
 
     try {

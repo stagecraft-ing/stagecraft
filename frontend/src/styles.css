@@ -103,6 +103,12 @@ a {
   margin: 0;
 }
 
+.page-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .breadcrumb {
   font-size: 0.85rem;
   margin-bottom: 0.5rem;

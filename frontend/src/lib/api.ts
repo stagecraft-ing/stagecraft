@@ -74,16 +74,29 @@ export async function apiSend<T>(
   path: string,
   body?: unknown,
 ): Promise<T> {
+  // Encore decodes DELETE payloads from the query string, not the body; a JSON
+  // body on DELETE fails with "unable to decode query string".
+  let url = path;
+  let payload = body;
+  if (method === "DELETE" && body !== undefined) {
+    const qs = new URLSearchParams(
+      Object.entries(body as Record<string, unknown>)
+        .filter(([, v]) => v !== undefined && v !== null)
+        .map(([k, v]) => [k, String(v)]),
+    ).toString();
+    if (qs) url += (url.includes("?") ? "&" : "?") + qs;
+    payload = undefined;
+  }
   const send = async (): Promise<Response> => {
     const token = await csrfToken();
-    return fetch(path, {
+    return fetch(url, {
       method,
       credentials: "same-origin",
       headers: {
         "X-CSRF-Token": token,
-        ...(body !== undefined ? { "Content-Type": "application/json" } : {}),
+        ...(payload !== undefined ? { "Content-Type": "application/json" } : {}),
       },
-      body: body !== undefined ? JSON.stringify(body) : undefined,
+      body: payload !== undefined ? JSON.stringify(payload) : undefined,
     });
   };
   let res = await send();
