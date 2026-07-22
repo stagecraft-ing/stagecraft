@@ -372,3 +372,65 @@ control plane (spec 009, in-progress) plus the operator prerequisites of
 
 This spec flips to `implementation: complete` once items 1-7 are exercised
 against the live cluster.
+
+## Status (2026-07-22): live acceptance walk, items 1-2 and 4-7 verified
+
+The operator-driven walk ran against app.statecraft.ing with the org
+`aigated` as the customer-side subject. Every §6 prerequisite was
+re-verified live first; two were found broken and fixed before item 1:
+the mounted `RAUTHY_API_KEY` carried literal shell quotes copied from an
+env line (rauthy answered 404 no-rows-returned; fixed at the SOPS source,
+PR #59), and the GitHub App's Setup + Webhook URLs pointed at the
+statecraft.ing marketing site (Pages 404/405 on every delivery since the
+App was created; both re-pointed at app.statecraft.ing, a webhook
+redelivery then verified green end to end).
+
+Verified live, in walk order:
+
+1. **Item 1.** A never-seen GitHub identity signed in through the
+   upstream provider: rauthy minted a federated account (empty rauthy
+   roles), the app row carries role `user`, and §5.1 resolution
+   populated `githubUserId`/`githubLogin` through the fixed API key.
+2. **Item 2.** The tenant-less install URL led to GitHub's own org
+   picker; installing into `aigated` auto-created the tenant named
+   after the org, an active installation, and an `admin` membership
+   (`source: install`, keyed by `userAccountId`); the explicit §5.3
+   reconcile then attached `githubUserId` and re-derived `admin` from
+   the live org role. Stamp and Fleet rendered enabled. The
+   `installation.created` webhook, redelivered to the fixed URL, was
+   absorbed idempotently against the setup-created rows.
+3. **Item 4.** In-app unlink removed the installation on GitHub
+   (verified in org settings), the row flipped `removed`, stamp and
+   fleet deploy both refused `failedPrecondition`, the UI disabled
+   Stamp; reinstalling through the tenant-bound URL re-activated
+   everything, with the fixed Setup URL landing the callback directly.
+4. **Item 5.** With a fleet app present the delete refused ("tenant has
+   1 fleet app(s)"). Fleet remove then succeeded through the full stack
+   (typed confirm, gate allow, k8s teardown), and the delete completed
+   the §5.5 sequence: GitHub-side uninstall (verified), tenant +
+   installations + memberships hard-deleted in one transaction, and
+   hash-chained `remove` and `tenant_delete` ledger records carrying
+   the gate's configHash and actor.
+5. **Items 6 and 7.** The org-derived tenant admin got
+   `permission_denied` (`ROLE_REQUIRED: statecraft_operator`) on both
+   operator endpoints and no Operators nav; the operator saw every
+   tenant including the not-owned one and ran remove + delete on it.
+
+Three production defects surfaced by the walk were fixed and deployed
+mid-walk (PRs #60-#62, image `aeefe203`): fleet remove never forwarded
+`subject_name`/`confirm_name` to the gate's confirm-name-required check
+(spec 006 amendment), the SPA sent DELETE payloads as JSON bodies where
+Encore decodes the query string, the dashboard lacked the §5.6 install
+entry (spec 007 amendment), and the pod lacked fleet RBAC entirely
+(spec 009 amendment; placement and teardown both died Forbidden).
+
+**Item 3 remains the sole open item**: it needs a second GitHub account
+holding admin on the same org, which does not exist yet. The mechanism
+it exercises (login-time org-role reconciliation over active
+installations) ran live via the explicit reconcile in item 2, but the
+item's own scenario (a second human, no install, admin membership at
+login) has not. Implementation stays `in-progress` until a second org
+admin exists and walks it. Chassis follow-up recorded for enrahitu: app
+sign-out never ends the rauthy session (RP-initiated logout without
+`id_token_hint` renders a confirmation page and the driver never sends
+one), so session switching requires the rauthy account-page logout.
