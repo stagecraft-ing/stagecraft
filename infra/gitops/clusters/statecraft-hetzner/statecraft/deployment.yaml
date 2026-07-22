@@ -179,11 +179,13 @@ spec:
             # ---------------------------------------------------------------
             - name: ADMIN_UI_ENABLED
               value: "true"
-          # The seven keys of spec 009 section 2.2, and no others. Notably
-          # absent: the four JWT_* PEMs and RAUTHY_CLIENT_SECRET, which the
-          # entrypoint unconditionally overwrites from /data. Injecting them
-          # is forbidden rather than merely redundant, because a Secret key
-          # the container ignores reads as configured while having no effect.
+          # The pod Secret keys of spec 009 section 2.2 (ten since
+          # 2026-07-22, RAUTHY_API_KEY joining for spec 011 github-identity),
+          # and no others. Notably absent: the four JWT_* PEMs and
+          # RAUTHY_CLIENT_SECRET, which the entrypoint unconditionally
+          # overwrites from /data. Injecting them is forbidden rather than
+          # merely redundant, because a Secret key the container ignores
+          # reads as configured while having no effect.
           envFrom:
             - secretRef:
                 name: statecraft-secrets

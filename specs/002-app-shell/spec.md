@@ -354,6 +354,11 @@ spec's territory; spec 012 §5.1 records the design.
   `roles.ts` gains `operatorRole()` reading the model; `env.ts` gains
   `adminUiEnabled` (`ADMIN_UI_ENABLED`, default true); `auth/mock.ts`
   gains the fourth (operator) principal.
+- Follow-up the same day: `infra.config.json`'s `secrets` block gains
+  `RAUTHY_API_KEY` (`$env` binding, the spec 011 §6 rauthy admin API
+  key), joining the eleven bindings already declared there, as the key
+  reached the pod Secret with the spec 012 deploy (spec 009's
+  2026-07-22 re-pin amendment trail).
 - Build wiring: `package.json` moves `@statecrafting/toolchain` to
   `0.3.0` and adds prom-client + the OTel packages, plus the
   `dev:web-admin`/`build:web-admin`/`extract:model`/`check:model`

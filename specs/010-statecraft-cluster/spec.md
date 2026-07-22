@@ -604,6 +604,15 @@ than performed:
 - Non-hetzner targets, and multi-cluster or HA topologies.
 - Re-homing the marketing site: the apex stays GitHub Pages.
 
+## Amendment (2026-07-22): the RAUTHY_API_KEY catalog delta
+
+The secret catalog (`infra/secrets/catalog.toml`, this spec's §4
+catalog line) gains `RAUTHY_API_KEY`: user-supplied, secret, required,
+the rauthy admin API key spec 011 §6 named as its catalog delta. The
+operator `.env`, the regenerated `.env.example` (37 keys), the pod
+Secret (spec 009), and `infra.config.json` (spec 002) all agree;
+`secrets:validate` and `secrets:check` are the proof.
+
 ## Amendment (2026-07-22): spec 012 frontend-admin adoption, the scrape lands
 
 Spec 012 makes two coordinated edits in this spec's `infra/` territory,

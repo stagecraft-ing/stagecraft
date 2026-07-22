@@ -1152,6 +1152,15 @@ schema. `RAUTHY_API_KEY` remains unminted (spec 011's remaining
 deploy-time act); github-identity resolution degrades to a logged
 `no_api_key` skip until it exists, which blocks nothing in this deploy.
 
+**Closed later the same day.** The operator had already minted the key
+(read scopes: users, roles, groups, clients, sessions, scopes, user
+attributes) and held it in the operator `.env`; the pod Secret
+(`statecraft-secrets.sops.yaml`, this spec's territory) gains
+`RAUTHY_API_KEY` as its tenth key, the Deployment's envFrom comment is
+updated, and the catalog/infra-config declarations land in specs
+010/002 territory with their own amendments. A pod restart after the
+Flux apply makes the key visible to the app.
+
 ## Amendment (2026-07-22): spec 012 frontend-admin adoption, deploy env
 
 Spec 012 makes one coordinated edit in this spec's deploy manifest
