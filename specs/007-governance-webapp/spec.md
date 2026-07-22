@@ -240,3 +240,16 @@ disables Stamp when the tenant has no active installation;
 `routes/fleet.tsx` disables the deploy form under the same condition;
 `routes.tsx` wires the operator route and the tenant-detail action. See
 specs/011-tenant-lifecycle/spec.md §5.7, §5.8.
+
+## Amendment (2026-07-22): DELETE transport encoding + the self-serve install entry
+
+Two fixes from spec 011's live acceptance walk, in this spec's `frontend/`
+territory. `lib/api.ts`: Encore decodes DELETE payloads from the query
+string, so `apiSend` now encodes DELETE bodies as query parameters (tenant
+delete, fleet remove, and operator membership revoke were all unusable
+from the SPA before this). `routes/dashboard.tsx` plus a `page-actions`
+rule in `styles.css`: the tenant-less install URL (spec 011 §5.6) gains
+its UI entry, with the empty state leading on "Install the GitHub App"
+and the page header offering "Install into a new org"; GitHub's own
+install picker does the org selection, so no in-app org chooser exists.
+See specs/011-tenant-lifecycle/spec.md §9.

@@ -368,3 +368,14 @@ installation (teardown stays ungated, spec 011 §5.7), and adds an internal
 `tenantAppSummary` endpoint the tenants service calls to enforce the
 delete-tenant precondition without a module cycle. See
 specs/011-tenant-lifecycle/spec.md §5.5, §5.7, §5.8.
+
+## Amendment (2026-07-22): remove-gate confirmation attributes
+
+Spec 011's live acceptance walk surfaced that `remove`'s `gateOrDeny` call
+never forwarded the typed confirmation into the gate's ActionContext, so
+the governance-native `confirm-name-required` check (gate.v1, active on
+action `remove`) denied every fleet remove in production. `api.ts` now
+echoes `subject_name` (the app name) and `confirm_name` (the caller's
+typed confirm) in the remove gate attributes. The endpoint-level
+name-confirm guard is unchanged; the gate now sees the same evidence it
+demands. See specs/011-tenant-lifecycle/spec.md §9.
