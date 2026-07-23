@@ -72,6 +72,9 @@ spec:
           # envFrom Secret below (section 2.2's nine plus RAUTHY_API_KEY);
           # POSTGRES_PASSWORD needs no line here because its secretKeyRef is
           # non-optional and kubelet already refuses to start without it.
+          # /bin/bash (and the ${!v} bashism) is guaranteed by the image: the
+          # base is node:24-trixie-slim and the image's own entrypoint is
+          # #!/bin/bash, so a bash-less image could never boot at all.
           command: ["/bin/bash", "-c"]
           args:
             - |

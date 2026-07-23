@@ -11,7 +11,8 @@
 #   - CLAUDE_CLI_VERSION pins the CLI; bump in lockstep with ai-pr-review.yml.
 # Changed from OAP: auth is the same CLAUDE_CODE_OAUTH_TOKEN secret the
 # review workflow uses (one operator-managed secret, not two), with the same
-# distinct failure when it is unset.
+# distinct failure when it is unset and the same auth-vs-outage failure
+# classification (auth errors fail the job; outages degrade loudly).
 
 name: AI Changelog
 
@@ -40,13 +41,22 @@ jobs:
       - name: Get previous tag
         id: prev_tag
         run: |
-          PREV=$(git tag --sort=-creatordate | head -2 | tail -1)
+          # sed -n 2p: the second-newest tag, EMPTY on a first release. head -2
+          # with a single tag would echo that tag back, and tag..tag is an
+          # empty range, so the first changelog would cover nothing.
+          PREV=$(git tag --sort=-creatordate | sed -n '2p')
           echo "tag=$PREV" >> "$GITHUB_OUTPUT"
 
       - name: Get commit log
         env:
           PREV_TAG: ${{ steps.prev_tag.outputs.tag }}
-        run: git log "${PREV_TAG}..HEAD" --oneline --no-merges > /tmp/commits.txt
+        run: |
+          # First release: no previous tag, so the changelog covers all history.
+          if [ -n "$PREV_TAG" ]; then
+            git log "${PREV_TAG}..HEAD" --oneline --no-merges > /tmp/commits.txt
+          else
+            git log HEAD --oneline --no-merges > /tmp/commits.txt
+          fi
 
       - name: Install Claude CLI
         run: npm install -g "@anthropic-ai/claude-code@${CLAUDE_CLI_VERSION}"
@@ -69,8 +79,24 @@ jobs:
 
           Each entry should be a bullet point with a concise description, keeping the spec id reference when present.
           Skip merge commits and trivial changes.'
-          claude -p "$PROMPT" --output-format text < /tmp/commits.txt > /tmp/changelog.md \
-            || echo "Changelog generation failed" > /tmp/changelog.md
+          # Same failure classification as ai-pr-review.yml: an auth error is a
+          # config bug that must fail the job (a broken token would otherwise
+          # surface only when someone inspects a release body), while an API
+          # outage degrades to a placeholder with a visible ::warning::.
+          if claude -p "$PROMPT" --output-format text < /tmp/commits.txt > /tmp/changelog.md 2> /tmp/changelog.err; then
+            :
+          else
+            rc=$?
+            err="$(cat /tmp/changelog.err /tmp/changelog.md 2>/dev/null)"
+            echo "claude exited ${rc}; captured output follows:" >&2
+            printf '%s\n' "$err" >&2
+            if printf '%s' "$err" | grep -qiE 'authentication_error|permission_error|invalid[^a-z]*(x-)?api[^a-z]*key|unauthorized|forbidden|oauth[^a-z]*(token)?[^a-z]*(invalid|expired|revoked|missing)'; then
+              echo "::error::Changelog generation could not authenticate (not an API outage); fix CLAUDE_CODE_OAUTH_TOKEN. Details above."
+              exit 1
+            fi
+            echo "::warning::Changelog generation failed (rc=${rc}); the release body carries a placeholder instead of a changelog."
+            echo "_Changelog generation failed; see the AI Changelog workflow run for details._" > /tmp/changelog.md
+          fi
 
       - name: Update release body
         env:

@@ -50,7 +50,10 @@ jobs:
       - name: Compute diff size
         id: diff
         run: |
-          DIFF_LINES=$(git diff origin/main...HEAD --stat | tail -1 | grep -oP '\d+ insertion' | grep -oP '\d+' || echo "0")
+          # Total churn, insertions PLUS deletions: a pure-deletion PR must
+          # still count against the cap. numstat reports binary files as "-",
+          # which awk coerces to 0; the +0 keeps an empty diff numeric.
+          DIFF_LINES=$(git diff origin/main...HEAD --numstat | awk '{ins+=$1; del+=$2} END {print ins+del+0}')
           echo "lines=$DIFF_LINES" >> "$GITHUB_OUTPUT"
           if [ "$DIFF_LINES" -gt "$DIFF_SIZE_CAP" ]; then
             echo "skip=true" >> "$GITHUB_OUTPUT"
