@@ -420,3 +420,47 @@ it to `ghcr-pull` (see the spec 009 §4.4 note and the spec 010 catalog
 correction; the semantics here are unchanged from §3 finding #2: a
 pre-provisioned Secret NAME, operator-created per tenant namespace,
 because fleet's RBAC deliberately grants nothing on secrets).
+
+## Amendment (2026-07-23): the in-pod two-stage E2E and the per-app ingress allow (fleet-native 0.2.0)
+
+The first fully in-pod two-stage fleet E2E ran 2026-07-23 from the
+production control-plane pod's own ServiceAccount, through the governed
+verbs only. Stage 1 placed `ealen/echo-server` on port 4000: namespace,
+Deployment, PVC, Service, Ingress up in about 39 seconds, public 200 on
+`/health` with a valid Let's Encrypt certificate. Stage 2 placed the
+private enrahitu chassis image on port 8080 (after copying `ghcr-pull`
+into the tenant namespace; reflector does not sync it, consistent with
+finding #2's operator-provisioned semantics). Both apps were then removed
+through the strict remove gate, so the full deploy/remove lifecycle ran
+in-pod; the deploy and remove attestations for both apps are recorded
+(record_seq 2 through 5).
+
+Stage 2 surfaced one real defect, the namespace-wide port pin. The
+addon's `fleet-allow-ingress-nginx` NetworkPolicy was namespace-scoped
+(`podSelector: {}`) but pinned the deploying app's single port, and its
+create-or-tolerate-409 application meant the first app placed into a
+tenant namespace froze the allowed port set for every later app. The
+chassis rolled out Ready, because kubelet probes bypass NetworkPolicy,
+and served 502 from the edge: the same silent-failure class the
+deploy-chosen-port amendment above killed, one layer down. Live
+mitigation: the policy was patched by hand to also admit 8080, after
+which the chassis served correctly from the public edge.
+
+The durable fix is statecrafting spec 006's amendment (2026-07-23,
+`fleet-native` 0.2.0): the ingress allow becomes per-app
+(`fleet-allow-ingress-<app>`, podSelector on the app's selector labels, a
+port list of exactly the app's port), `removeApp` deletes it with the
+app's other per-app resources, and the namespace-scoped deny-all + egress
+baseline pair is unchanged. This spec's consumer pin moves from `0.1.0`
+to `0.2.0`; the napi surface and the TS facade are unchanged, so no code
+in `backend/fleet/` moves.
+
+Operator residuals from the run, recorded here because this spec is the
+live operational record:
+
+- The hand-patched namespace-wide `fleet-allow-ingress-nginx` in the test
+  tenant's namespace predates 0.2.0 and is deleted once the 0.2.0-pinned
+  image is live and placements have per-app policies. NetworkPolicies are
+  additive, so the ordering is safe in both directions.
+- `fleet-allow-egress` admits only DNS and outbound 443: a placed cell
+  cannot reach SMTP, a residual for cells that send mail.
